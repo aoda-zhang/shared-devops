@@ -18,7 +18,6 @@ jobs:
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
       security-events: write
-      # only required for workflows in private repositories
       actions: read
       contents: read
 
