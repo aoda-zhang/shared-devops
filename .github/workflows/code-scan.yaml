@@ -2,6 +2,10 @@ name: "CodeScan"
 on:
   push:
     branches: ["develop", "master", "main"]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+      - '**/*.yaml'
   workflow_call:
     inputs:
       codeScan_language:
@@ -33,6 +37,6 @@ jobs:
         uses: github/codeql-action/autobuild@master
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@master
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ inputs.codeScan_language}}"
