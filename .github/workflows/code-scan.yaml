@@ -1,0 +1,39 @@
+name: "CodeScan"
+on:
+  push:
+    branches: ["develop", "master", "main"]
+  workflow_call:
+    inputs:
+      codeScan_language:
+        required: true
+        type: string
+        default: "javascript-typescript"
+  # schedule:
+  # - cron: "28 16 * * 3"
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    permissions:
+      security-events: write
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@master
+        with:
+          languages: ${{ inputs.codeScan_language}}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@master
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@master
+        with:
+          category: "/language:${{ inputs.codeScan_language}}"
