@@ -17,28 +17,27 @@ on:
         required: true
         type: string
         default: "develop"
-  # schedule:
-  # - cron: "28 16 * * 3"
-
+permissions:
+  security-events: write
+  actions: read
+  contents: read
 jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
 
-  checkout_code:
-    runs-on: ubuntu-latest
-    uses: actions/checkout@v4
-    with:
-      repository: ${{ inputs.repository }}
-      ref: ${{ inputs.branch }}
-			
-	Initialize_codeQL:
-    runs-on: ubuntu-latest
-    needs: checkout_code
-    uses: github/codeql-action/init@v3
-    with:
-      languages: ${{ inputs.codeScan_language}}
-			
-	generate_scan_report:
-    runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.branch }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.codeScan_language}}
+
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
