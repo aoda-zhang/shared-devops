@@ -21,27 +21,26 @@ on:
   # - cron: "28 16 * * 3"
 
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    
-    steps:
-      - name: Checkout repository
+  runs-on: ubuntu-latest
+  timeout-minutes: 120
+  steps:
+    - name: Checkout repository
         uses: actions/checkout@v4
         with:
-         repository: ${{ inputs.repository }}
-         ref: ${{ inputs.branch }}
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.branch }}
 
-      - name: Initialize CodeQL
+    - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ inputs.codeScan_language}}
 
-      - name: Autobuild
+    - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ inputs.codeScan_language}}"
+   
+    
