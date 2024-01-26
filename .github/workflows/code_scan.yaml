@@ -1,7 +1,7 @@
 name: "CodeScan"
 on:
   push:
-    branches: ["develop", "master", "main"]
+    branches: [develop, master, main"]
     paths-ignore:
       - "**/.github/**"
   workflow_call:
@@ -25,15 +25,13 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     timeout-minutes: 120
-      security-events: write
-      actions: read
-      contents: read
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        repository: ${{ inputs.repository }}
-        ref: ${{ inputs.branch }}
+        with:
+         repository: ${{ inputs.repository }}
+         ref: ${{ inputs.branch }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
