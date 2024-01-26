@@ -10,6 +10,9 @@ on:
         required: true
         type: string
         default: "javascript-typescript"
+      repository:
+        required: true
+        type: string
       branch:
         required: true
         type: string
@@ -29,6 +32,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        repository: ${{ inputs.repository }}
         ref: ${{ inputs.branch }}
 
       - name: Initialize CodeQL
