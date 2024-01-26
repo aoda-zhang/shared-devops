@@ -22,9 +22,8 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
-    permissions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
       security-events: write
       actions: read
       contents: read
@@ -35,7 +34,7 @@ jobs:
         ref: ${{ inputs.branch }}
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@master
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ inputs.codeScan_language}}
 
