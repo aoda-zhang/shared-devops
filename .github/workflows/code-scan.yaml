@@ -3,9 +3,7 @@ on:
   push:
     branches: ["develop", "master", "main"]
     paths-ignore:
-      - "**/*.md"
-      - "**/*.txt"
-      - "**/*.yaml"
+      - "**/.github/**"
   workflow_call:
     inputs:
       codeScan_language:
