@@ -1,7 +1,7 @@
 name: "CodeScan"
 on:
   push:
-    branches: [develop, master, main"]
+    branches: [develop, master, main]
     paths-ignore:
       - "**/.github/**"
   workflow_call:
