@@ -3,15 +3,19 @@ on:
   push:
     branches: ["develop", "master", "main"]
     paths-ignore:
-      - '**/*.md'
-      - '**/*.txt'
-      - '**/*.yaml'
+      - "**/*.md"
+      - "**/*.txt"
+      - "**/*.yaml"
   workflow_call:
     inputs:
       codeScan_language:
         required: true
         type: string
         default: "javascript-typescript"
+      branch:
+        required: true
+        type: string
+        default: "develop"
   # schedule:
   # - cron: "28 16 * * 3"
 
@@ -28,7 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+        ref: ${{ inputs.branch }}
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@master
         with:
