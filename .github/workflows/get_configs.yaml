@@ -5,6 +5,12 @@ on:
     paths-ignore:
       - "**/.github/**"
   workflow_call:
+
+    secrets:
+      PAT:
+        required: true
+        type: string
+
     inputs:
       current_env:
         required: true
@@ -18,9 +24,6 @@ on:
         type: string
         default: "master || main"
       config_path:
-        required: true
-        type: string
-      PAT:
         required: true
         type: string
 permissions:
@@ -42,7 +45,7 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.branch }}
-          token: ${{ inputs.PAT }}
+          token: ${{ secrets.PAT }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
