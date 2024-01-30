@@ -1,0 +1,48 @@
+name: "getConfigs"
+on:
+  push:
+    branches: [develop, master, main]
+    paths-ignore:
+      - "**/.github/**"
+  workflow_call:
+    inputs:
+      current_env:
+        required: true
+        type: string
+        default: "javascript-typescript"
+      repository:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+        default: "master || main"
+      config_path:
+        required: true
+        type: string
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+
+env:
+  artifactName: "envFile"
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.CONFIG_ACCESS_TOKEN }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ env.artifactName }}
+          path: "honey-frontEnd/dev"
+          # path: ${{ inputs.config_path }}
