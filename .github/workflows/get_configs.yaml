@@ -9,7 +9,7 @@ on:
       current_env:
         required: true
         type: string
-        default: "javascript-typescript"
+        default: "dev"
       repository:
         required: true
         type: string
@@ -18,6 +18,9 @@ on:
         type: string
         default: "master || main"
       config_path:
+        required: true
+        type: string
+      PAT:
         required: true
         type: string
 permissions:
@@ -39,10 +42,9 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.branch }}
-          token: ${{ secrets.CONFIG_ACCESS_TOKEN }}
+          token: ${{ inputs.PAT }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
           name: ${{ env.artifactName }}
-          path: "honey-frontEnd/dev"
-          # path: ${{ inputs.config_path }}
+          path: ${{ inputs.config_path }}
