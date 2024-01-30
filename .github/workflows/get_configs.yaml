@@ -21,7 +21,6 @@ on:
       branch:
         required: true
         type: string
-        default: "master || main"
       config_path:
         required: true
         type: string
