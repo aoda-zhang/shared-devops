@@ -5,11 +5,10 @@ on:
     paths-ignore:
       - "**/.github/**"
   workflow_call:
-
     secrets:
       PAT:
         required: true
-        type: string
+        description: "private access token"
 
     inputs:
       current_env:
