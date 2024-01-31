@@ -24,13 +24,14 @@ on:
       config_path:
         required: true
         type: string
+      envFileName:
+        required: true
+        type: string
 permissions:
   security-events: write
   actions: read
   contents: read
 
-env:
-  artifactName: "envFile"
 jobs:
   analyze:
     name: Analyze
@@ -47,5 +48,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
-          name: ${{ env.artifactName }}
+          name: ${{ inputs.envFileName }}
           path: ${{ inputs.config_path }}
