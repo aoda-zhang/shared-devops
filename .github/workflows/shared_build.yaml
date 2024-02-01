@@ -75,9 +75,10 @@ jobs:
 
       - name: Checkout business code
         uses: actions/checkout@master
-        repository: ${{ inputs.app_repository }}
-        ref: ${{ inputs.app_branch }}
-        token: ${{ secrets.PAT }}
+        with:
+          repository: ${{ inputs.app_repository }}
+          ref: ${{ inputs.app_branch }}
+          token: ${{ secrets.PAT }}
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
