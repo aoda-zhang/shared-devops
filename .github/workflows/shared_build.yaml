@@ -55,7 +55,7 @@ on:
 
 jobs:
   CodeScan:
-    uses: ./code_scan.yaml@master
+    uses: aoda-zhang/shared-devops/.github/workflows/code_scan.yaml@master
     with:
       repository: ${{ inputs.app_repository }}
       codeScan_language: ${{ inputs.codeScan_language }}
