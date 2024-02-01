@@ -8,7 +8,7 @@ on:
 
   workflow_call:
     secrets:
-      AWS_S3_BUCKET: 
+      AWS_BUCKET: 
         required: true
         description: "AWS S3 bucket"
       AWS_ACCESS_KEY_ID: 
