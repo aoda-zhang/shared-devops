@@ -1,26 +1,21 @@
 name: "CodeScan"
 on:
   push:
-    branches: [develop, master, main]
     paths-ignore:
       - "**/.github/**"
   workflow_call:
     inputs:
       codeScan_language:
-        required: true
+        required: false
         type: string
         default: "javascript-typescript"
       repository:
         required: true
         type: string
       branch:
-        required: true
+        required: false
         type: string
         default: "develop"
-permissions:
-  security-events: write
-  actions: read
-  contents: read
 jobs:
   analyze:
     name: Analyze
