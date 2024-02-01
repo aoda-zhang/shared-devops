@@ -11,7 +11,7 @@ on:
       AWS_BUCKET: 
         required: true
         description: "AWS S3 bucket"
-      AWS_ACCESS_KEY_ID: 
+      AWS_KEY_ID: 
         required: true
         description: "AWS key ID"
       AWS_SECRET_ACCESS_KEY: 
