@@ -18,11 +18,11 @@ on:
         required: true
         type: string
       codeScan_language:
-        required: true
+        required: false
         type: string
         default: javascript-typescript
       app_branch:
-        required: true
+        required: false
         type: string
         default: develop
 
