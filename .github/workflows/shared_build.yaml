@@ -53,14 +53,6 @@ on:
         default: build
 
 jobs:
-  CodeScan:
-    uses: aoda-zhang/shared-devops/.github/workflows/code_scan.yaml@master
-    with:
-      repository: ${{ inputs.app_repository }}
-      codeScan_language: ${{ inputs.codeScan_language }}
-      branch: ${{ inputs.app_branch }}
-    secrets: inherit
-
   Build:
     runs-on: ubuntu-latest
 
