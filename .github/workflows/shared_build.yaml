@@ -12,8 +12,7 @@ on:
         description: "private access token"
 
     inputs:
-
-    # the application that u want to deploy
+      # the application that u want to deploy
       app_repository:
         required: true
         type: string
@@ -26,7 +25,7 @@ on:
         type: string
         default: develop
 
-   # the environment configs that u want to get
+      # the environment configs that u want to get
       config_repository:
         required: false
         type: string
@@ -38,18 +37,18 @@ on:
       config_folder:
         required: true
         type: string
-    
-    # the environment that u want to deploy (dev,test,prod)
+
+      # the environment that u want to deploy (dev,test,prod)
       currentEnv:
         required: true
         type: string
         default: dev
-    # the build artifact options
+      # the build artifact options
       build_name:
         required: true
         type: string
       build_path:
-        required: true
+        required: false
         type: string
         default: build
 
