@@ -1,5 +1,11 @@
 name: Vercel Preview Deployment
  workflow_call:
+
+    inputs:
+      build_name:
+        required: true
+        type: string
+
     secrets:
       VERCEL_USER_ID: 
         required: true
@@ -21,7 +27,17 @@ jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ${{ inputs.build_name }}
+
+      - name: Display downloaded files
+        run: ls -R
+
       - name: Install Vercel CLI
         run: yarn add --global vercel@latest
+        
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
