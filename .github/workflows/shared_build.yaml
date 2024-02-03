@@ -75,9 +75,10 @@ jobs:
 
       - name: Copy Config Files to Business Code
         run: |
-          cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }} ${{ github.workspace }}
+          cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/* ${{ github.workspace }}
           mv app/* .
           rm -r app
+          rm -r config
         working-directory: ${{ github.workspace }}
 
       - name: Display works files
