@@ -74,9 +74,9 @@ jobs:
         id: app
       
       - name: Copy Config Files to Business Code
-      run: |
+        run: |
         cp -r ${{ github.workspace }}/config/* ${{ github.workspace }}/app/
-      working-directory: ${{ steps.app.outputs.path }}
+        working-directory: ${{ steps.app.outputs.path }}
 
       - name: Display works files
         run: ls -R
