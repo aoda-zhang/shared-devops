@@ -75,8 +75,7 @@ jobs:
 
       - name: Debug Directory Contents
         run: |
-          ls -la ${{ github.workspace }}/config
-          ls -la ${{ github.workspace }}/app
+          ls -la ${{ github.workspace }}
       
       - name: Copy Config Files to Business Code
         run: |
