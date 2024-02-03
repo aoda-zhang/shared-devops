@@ -63,7 +63,8 @@ jobs:
           repository: ${{ inputs.config_repository }}
           ref: ${{ inputs.config_branch }}
           token: ${{ secrets.PAT }}
-        id: config
+          path: config
+        # id: config
 
       - name: Checkout business code
         uses: actions/checkout@master
@@ -71,7 +72,8 @@ jobs:
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
-        id: app
+          path: app
+        # id: app
 
       - name: Debug Directory Contents
         run: |
