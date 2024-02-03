@@ -77,7 +77,7 @@ jobs:
         run: |
           cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }} ${{ github.workspace }}
           mv app/* .
-          rmdir app
+          rm -r app
         working-directory: ${{ github.workspace }}
 
       - name: Display works files
