@@ -63,8 +63,14 @@ jobs:
           repository: ${{ inputs.config_repository }}
           ref: ${{ inputs.config_branch }}
           token: ${{ secrets.PAT }}
-          path: config
-
+          # path: config
+      - name: Read .env File and Set Environment Variables
+        run: |
+          echo "Reading .env file..."
+          echo "export $(grep -v '^#' .env | xargs -d '\n')" >> $GITHUB_ENV
+          cat $GITHUB_ENV
+        working-directory: ${{ github.workspace }}
+      
       - name: Checkout business code
         uses: actions/checkout@master
         with:
