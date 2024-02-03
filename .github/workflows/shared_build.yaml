@@ -71,6 +71,9 @@ jobs:
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
 
+      - name: Display works files
+        run: ls -R
+
       - name: Set Node version and Cache
         uses: actions/setup-node@master
         with:

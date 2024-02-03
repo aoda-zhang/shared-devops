@@ -11,6 +11,12 @@ on:
       build_name:
         required: true
         type: string
+      app_repository:
+        required: true
+        type: string
+      app_branch:
+        required: true
+        type: string
 
     secrets:
       PAT:
@@ -37,6 +43,13 @@ jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout business code
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.app_repository }}
+          ref: ${{ inputs.app_branch }}
+          token: ${{ secrets.PAT }}
+
       - name: Download Artifacts
         uses: actions/download-artifact@master
         with:
