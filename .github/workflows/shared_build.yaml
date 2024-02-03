@@ -72,6 +72,11 @@ jobs:
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
         id: app
+
+      - name: Debug Directory Contents
+        run: |
+          ls -la ${{ github.workspace }}/config
+          ls -la ${{ github.workspace }}/app
       
       - name: Copy Config Files to Business Code
         run: |
