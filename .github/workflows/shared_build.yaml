@@ -72,16 +72,14 @@ jobs:
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
-          path: app
-        # id: app
 
       - name: Debug Directory Contents
         run: |
           ls -la ${{ github.workspace }}
-      
+
       - name: Copy Config Files to Business Code
         run: |
-          cp -r ${{ github.workspace }}/config/* ${{ github.workspace }}/app/
+          cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }} ${{ github.workspace }}
         working-directory: ${{ steps.app.outputs.path }}
 
       - name: Display works files
