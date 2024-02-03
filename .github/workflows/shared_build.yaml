@@ -57,12 +57,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: get environment files
+      - name: Checkout environment configs
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.config_repository }}
           ref: ${{ inputs.config_branch }}
           token: ${{ secrets.PAT }}
+        id: config
 
       - name: Checkout business code
         uses: actions/checkout@master
@@ -70,6 +71,12 @@ jobs:
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
+        id: app
+      
+      - name: Copy Config Files to Business Code
+      run: |
+        cp -r ${{ github.workspace }}/config/* ${{ github.workspace }}/app/
+      working-directory: ${{ steps.app.outputs.path }}
 
       - name: Display works files
         run: ls -R
