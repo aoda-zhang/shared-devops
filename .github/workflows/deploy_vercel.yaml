@@ -11,6 +11,9 @@ on:
       PAT:
         required: true
         description: "private access token"
+      VERCEL_TOKEN:
+        required: true
+        description: "the vercel deploy token"
 
     inputs:
       # the application that u want to deploy
