@@ -57,12 +57,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Checkout environment configs
-      #   uses: actions/checkout@master
-      #   with:
-      #     repository: ${{ inputs.config_repository }}
-      #     ref: ${{ inputs.config_branch }}
-      #     token: ${{ secrets.PAT }}
+      - name: Checkout environment configs
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.config_repository }}
+          ref: ${{ inputs.config_branch }}
+          token: ${{ secrets.PAT }}
+          path: config
 
       # - name: Set environment variables
       #   run: |
@@ -76,9 +77,19 @@ jobs:
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
+          path: app
+
+      - name: Copy Config Files to Business Code
+        run: |
+          cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ${{ github.workspace }}
+          mv app/* .
+          rm -r app
+          rm -r config
+        working-directory: ${{ github.workspace }}
 
       - name: Display works files
-        run: ls -R
+        run: ls lR
+
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
