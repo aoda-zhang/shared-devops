@@ -37,6 +37,6 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Check for code scanning alerts
-        run: node .github/scripts/check-code-scanning.js
+        run: node .github/workflows/check-code-scanning.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
