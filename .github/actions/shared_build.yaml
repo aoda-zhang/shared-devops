@@ -1,0 +1,102 @@
+name: shared build devops
+on:
+  push:
+    paths-ignore:
+      - "**/.github/**"
+      - "**/*.txt"
+
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+        description: "private access token"
+
+    inputs:
+      # the application that u want to deploy
+      app_repository:
+        required: true
+        type: string
+      codeScan_language:
+        required: false
+        type: string
+        default: javascript-typescript
+      app_branch:
+        required: false
+        type: string
+        default: develop
+
+      # the environment configs that u want to get
+      config_repository:
+        required: false
+        type: string
+        default: aoda-zhang/shared-configs
+      config_branch:
+        required: false
+        type: string
+        default: main
+      config_folder:
+        required: true
+        type: string
+
+      # the environment that u want to deploy (dev,test,prod)
+      currentEnv:
+        required: true
+        type: string
+        default: dev
+      # the build artifact options
+      build_name:
+        required: true
+        type: string
+      build_path:
+        required: false
+        type: string
+        default: build
+
+      node_version:
+        required: false
+        type: string
+        default: '20'
+
+jobs:
+  setEnv_And_Build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout environment configs
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.config_repository }}
+          ref: ${{ inputs.config_branch }}
+          token: ${{ secrets.PAT }}
+          path: config
+      
+      - name: Checkout business code
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.app_repository }}
+          ref: ${{ inputs.app_branch }}
+          token: ${{ secrets.PAT }}
+          path: app
+
+      - name: set environment
+        run: |
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
+          mv app/* .
+          rm -r app
+          rm -r config
+
+      - name: Set Node version and Cache
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: "yarn"
+
+      - name: Install and Build
+        run: |
+          yarn && yarn run build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ inputs.build_name }}
+          path: ${{ inputs.build_path }}

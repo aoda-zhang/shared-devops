@@ -32,9 +32,6 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: ${{ inputs.build_name }}
-
-      - name: Display downloaded files
-        run: ls -R
         
       - name: deploy files to aws
         uses: jakejarvis/s3-sync-action@master

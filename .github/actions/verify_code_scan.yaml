@@ -1,0 +1,42 @@
+name: Verify Code Scanning
+
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+        description: "private access token"
+
+    inputs:
+      # the application that u want to deploy
+      app_repository:
+        required: true
+        type: string
+      codeScan_language:
+        required: false
+        type: string
+        default: javascript-typescript
+      app_branch:
+        required: false
+        type: string
+        default: develop
+
+jobs:
+  VerifyCodeScanning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ inputs.app_repository }}
+          ref: ${{ inputs.app_branch }}
+          token: ${{ secrets.PAT }}
+
+      - name: Check for code scanning alerts
+        run: node .github/scripts/check-code-scanning.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

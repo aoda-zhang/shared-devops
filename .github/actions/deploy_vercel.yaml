@@ -1,4 +1,5 @@
-name: shared build devops
+name: Vercel Preview Deployment
+
 on:
   push:
     paths-ignore:
@@ -51,11 +52,14 @@ on:
         required: false
         type: string
         default: build
+      node_version:
+        required: false
+        type: string
+        default: '20'
 
 jobs:
-  Build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout environment configs
         uses: actions/checkout@master
@@ -64,45 +68,32 @@ jobs:
           ref: ${{ inputs.config_branch }}
           token: ${{ secrets.PAT }}
           path: config
-
-      # - name: Set environment variables
-      #   run: |
-      #     cd ${{ inputs.config_folder }}/${{ inputs.currentEnv }}
-      #     echo "export $(grep -v '^#' .env | xargs -d '\n')" >> $GITHUB_ENV
-      #   working-directory: ${{ github.workspace }}
       
-      - name: Checkout business code
+      - name: Checkout business codes
         uses: actions/checkout@master
         with:
-          repository: ${{ inputs.app_repository }}
-          ref: ${{ inputs.app_branch }}
-          token: ${{ secrets.PAT }}
           path: app
 
-      - name: Copy Config Files to Business Code
+      - name: set environment
         run: |
-          cp -r ${{ github.workspace }}/config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ${{ github.workspace }}
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
           mv app/* .
           rm -r app
           rm -r config
-        working-directory: ${{ github.workspace }}
-
-      - name: Display works files
-        run: ls lR
-
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
         with:
           node-version: ${{ inputs.node_version }}
           cache: "yarn"
-
-      - name: Install and Build
+      
+      - name: Install node_modules
         run: |
-          yarn && yarn run build
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ inputs.build_name }}
-          path: ${{ inputs.build_path }}
+          yarn && yarn global add vercel@latest
+      
+      - name: build and deploy
+        run: |
+          vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+          
