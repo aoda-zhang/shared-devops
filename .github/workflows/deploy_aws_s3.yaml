@@ -33,7 +33,7 @@ jobs:
         with:
           name: ${{ inputs.build_name }}
         
-      - name: deploy files to aws
+      - name: Upload files to aws
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete

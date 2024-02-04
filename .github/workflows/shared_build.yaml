@@ -78,7 +78,7 @@ jobs:
           token: ${{ secrets.PAT }}
           path: app
 
-      - name: set environment
+      - name: Set environment
         run: |
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
           mv app/* .
