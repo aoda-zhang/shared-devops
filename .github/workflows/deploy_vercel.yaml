@@ -44,14 +44,7 @@ on:
         required: true
         type: string
         default: dev
-      # the build artifact options
-      build_name:
-        required: true
-        type: string
-      build_path:
-        required: false
-        type: string
-        default: build
+
       node_version:
         required: false
         type: string
