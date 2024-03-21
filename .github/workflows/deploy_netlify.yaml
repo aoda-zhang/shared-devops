@@ -8,8 +8,6 @@ on:
 
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
-      required: false
       PAT:
         required: true
         description: "private access token"
