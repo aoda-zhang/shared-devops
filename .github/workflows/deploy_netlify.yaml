@@ -1,0 +1,106 @@
+name: Netlify Preview Deployment
+
+on:
+  push:
+    paths-ignore:
+      - "**/.github/**"
+      - "**/*.txt"
+
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+      required: false
+      PAT:
+        required: true
+        description: "private access token"
+      NETLIFY_AUTH_TOKEN:
+        required: true
+        description: "netlify access token"
+      NETLIFY_SITE_ID:
+        required: true
+        description: "the netlify project ID"
+
+    inputs:
+      # the application that u want to deploy
+      app_repository:
+        required: true
+        type: string
+      codeScan_language:
+        required: false
+        type: string
+        default: javascript-typescript
+      app_branch:
+        required: false
+        type: string
+        default: develop
+
+      # the environment configs that u want to get
+      config_repository:
+        required: false
+        type: string
+        default: aoda-zhang/shared-configs
+      config_branch:
+        required: false
+        type: string
+        default: main
+      config_folder:
+        required: true
+        type: string
+
+      # the environment that u want to deploy (dev,test,prod)
+      currentEnv:
+        required: true
+        type: string
+        default: dev
+
+      node_version:
+        required: false
+        type: string
+        default: '20'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout environment configs
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.config_repository }}
+          ref: ${{ inputs.config_branch }}
+          token: ${{ secrets.PAT }}
+          path: config
+      
+      - name: Checkout business codes
+        uses: actions/checkout@master
+        with:
+          path: app
+
+      - name: set environment
+        run: |
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
+          mv app/* .
+          rm -r app
+          rm -r config
+
+      - name: Set Node version and Cache
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: "yarn"
+      
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build file
+        run: yarn run build
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './build'
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          
