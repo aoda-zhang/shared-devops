@@ -91,6 +91,11 @@ jobs:
 
       - name: Build file
         run: yarn run build
+      - name: Deploy to test
+        run: |
+         
+          echo $REACT_APP_PRIVATE_KEY
+          
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
