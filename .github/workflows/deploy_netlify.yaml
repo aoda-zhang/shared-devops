@@ -75,9 +75,7 @@ jobs:
 
       - name: set environment
         run: |
-          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
-          mv app/* .
-          rm -r app
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .app/src/config/env/
           rm -r config
 
       - name: Set Node version and Cache
