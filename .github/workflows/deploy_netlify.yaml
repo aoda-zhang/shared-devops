@@ -73,12 +73,14 @@ jobs:
         with:
           path: app
 
-      - name: set environment
+      - name: Set environment
         run: |
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
           mv app/* .
-          rm -f app
+          rm -r app
           rm -r config
+          run: ls
+          echo $REACT_APP_PRIVATE_KEY
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
@@ -94,9 +96,6 @@ jobs:
       - name: Deploy to test
         run: |
          
-          echo $REACT_APP_PRIVATE_KEY
-          
-
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
