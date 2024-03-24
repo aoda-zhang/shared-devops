@@ -87,10 +87,7 @@ jobs:
           cache: "yarn"
       
       - name: Install dependencies
-        run: |
-          yarn
-          ls
-          echo $REACT_APP_PRIVATE_KEY
+        run: yarn
 
       - name: Build file
         run: yarn run build
