@@ -79,8 +79,6 @@ jobs:
           mv app/* .
           rm -r app
           rm -r config
-          ls
-          echo $REACT_APP_PRIVATE_KEY
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
@@ -89,12 +87,13 @@ jobs:
           cache: "yarn"
       
       - name: Install dependencies
-        run: yarn
+        run: |
+          yarn
+          ls
+          echo $REACT_APP_PRIVATE_KEY
 
       - name: Build file
         run: yarn run build
-      - name: Deploy to test
-        run: |
          
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
