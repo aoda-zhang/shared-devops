@@ -79,7 +79,7 @@ jobs:
           mv app/* .
           rm -r app
           rm -r config
-          run: ls
+          ls
           echo $REACT_APP_PRIVATE_KEY
 
       - name: Set Node version and Cache
