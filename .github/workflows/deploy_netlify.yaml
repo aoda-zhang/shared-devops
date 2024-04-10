@@ -54,14 +54,17 @@ on:
       node_version:
         required: false
         type: string
-        default: '20'
+        default: "20"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-      - name: Checkout environment configs
+      - name: Create .env file
+  run: |
+
+      - name: Checkout configs
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.config_repository }}
@@ -69,17 +72,25 @@ jobs:
           token: ${{ secrets.PAT }}
           path: config
       
-      - name: Checkout business codes
+      - name: Checkout business code
         uses: actions/checkout@master
         with:
           path: app
 
-      - name: Set environment
+      - name: Set configs
         run: |
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
           mv app/* .
           rm -r app
           rm -r config
+
+      - name: Set runtime environment
+        run: |
+          touch .env
+          echo REACT_APP_OIL_PRICE=${{ secrets.REACT_APP_OIL_PRICE }} value >> .env
+          echo REACT_APP_PRIVATE_KEY=${{ secrets.REACT_APP_PRIVATE_KEY }} value >> .env
+          echo REACT_APP_BASEURL=${{ secrets.REACT_APP_BASEURL }} value >> .env
+    
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
@@ -103,4 +114,3 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          
