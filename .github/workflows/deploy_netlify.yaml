@@ -59,6 +59,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.currentEnv }}
     steps:
       - name: Checkout environment configs
         uses: actions/checkout@master
@@ -89,7 +90,7 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Build file
+      - name: Build project
         run: yarn run build
          
       - name: Deploy to Netlify
