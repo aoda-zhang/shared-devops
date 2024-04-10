@@ -90,8 +90,8 @@ jobs:
           echo REACT_APP_OIL_PRICE=${{ secrets.REACT_APP_OIL_PRICE }} value >> .env
           echo REACT_APP_PRIVATE_KEY=${{ secrets.REACT_APP_PRIVATE_KEY }} value >> .env
           echo REACT_APP_BASEURL=${{ secrets.REACT_APP_BASEURL }} value >> .env
+          cat .env
     
-
       - name: Set Node version and Cache
         uses: actions/setup-node@master
         with:
