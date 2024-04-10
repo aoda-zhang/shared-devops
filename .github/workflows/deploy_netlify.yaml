@@ -49,7 +49,7 @@ on:
       currentEnv:
         required: true
         type: string
-        default: dev
+        default: DEV
 
       node_version:
         required: false
@@ -98,6 +98,7 @@ jobs:
           publish-dir: './build'
           production-branch: master
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-deployment-environment: ${{ inputs.currentEnv }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
