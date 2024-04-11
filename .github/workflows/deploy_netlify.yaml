@@ -61,9 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-      - name: Create .env file
-  run: |
-
       - name: Checkout configs
         uses: actions/checkout@master
         with:
@@ -71,7 +68,7 @@ jobs:
           ref: ${{ inputs.config_branch }}
           token: ${{ secrets.PAT }}
           path: config
-      
+
       - name: Checkout business code
         uses: actions/checkout@master
         with:
@@ -84,30 +81,30 @@ jobs:
           rm -r app
           rm -r config
 
-      - name: Set runtime environment
+      - name: Set environment
         run: |
           touch .env
-          echo REACT_APP_OIL_PRICE=${{ secrets.REACT_APP_OIL_PRICE }} value >> .env
-          echo REACT_APP_PRIVATE_KEY=${{ secrets.REACT_APP_PRIVATE_KEY }} value >> .env
-          echo REACT_APP_BASEURL=${{ secrets.REACT_APP_BASEURL }} value >> .env
+          echo REACT_APP_OIL_PRICE = ${{ secrets.REACT_APP_OIL_PRICE }} value >> .env
+          echo REACT_APP_PRIVATE_KEY = ${{ secrets.REACT_APP_PRIVATE_KEY }} value >> .env
+          echo REACT_APP_BASEURL = ${{ secrets.REACT_APP_BASEURL }} value >> .env
           cat .env
-    
-      - name: Set Node version and Cache
+
+      - name: Set node version and cache
         uses: actions/setup-node@master
         with:
           node-version: ${{ inputs.node_version }}
           cache: "yarn"
-      
+
       - name: Install dependencies
         run: yarn
 
       - name: Build project
         run: yarn run build
-         
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
-          publish-dir: './build'
+          publish-dir: "./build"
           production-branch: master
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-deployment-environment: ${{ inputs.currentEnv }}
