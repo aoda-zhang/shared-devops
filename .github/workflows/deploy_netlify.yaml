@@ -84,9 +84,9 @@ jobs:
       - name: Set environment
         run: |
           touch .env
-          echo REACT_APP_OIL_PRICE = ${{ secrets.REACT_APP_OIL_PRICE }} >> .env
-          echo REACT_APP_PRIVATE_KEY = ${{ secrets.REACT_APP_PRIVATE_KEY }} >> .env
-          echo REACT_APP_BASEURL = ${{ secrets.REACT_APP_BASEURL }} >> .env
+          echo REACT_APP_OIL_PRICE=${{ secrets.REACT_APP_OIL_PRICE }} >> .env
+          echo REACT_APP_PRIVATE_KEY=${{ secrets.REACT_APP_PRIVATE_KEY }} >> .env
+          echo REACT_APP_BASEURL=${{ secrets.REACT_APP_BASEURL }} >> .env
           cat .env
 
       - name: Set node version and cache
