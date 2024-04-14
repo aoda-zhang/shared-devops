@@ -61,7 +61,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-      - name: Checkout configs
+
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          path: app
+
+      - name: Set node version and cache
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: "yarn"
+
+      - name: Get configs
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.config_repository }}
@@ -69,24 +81,12 @@ jobs:
           token: ${{ secrets.PAT }}
           path: config
 
-      - name: Checkout business code
-        uses: actions/checkout@master
-        with:
-          path: app
-
       - name: Set configs
         run: |
           cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           mv app/* .
           rm -r app
           rm -r config
-          ls -R | grep -v "node_modules"
-
-      - name: Set node version and cache
-        uses: actions/setup-node@master
-        with:
-          node-version: ${{ inputs.node_version }}
-          cache: "yarn"
 
       - name: Install dependencies
         run: yarn
