@@ -61,17 +61,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-
       - name: Checkout code
         uses: actions/checkout@master
         with:
           path: app
-
-      - name: Set node version and cache
-        uses: actions/setup-node@master
-        with:
-          node-version: ${{ inputs.node_version }}
-          cache: "yarn"
 
       - name: Get configs
         uses: actions/checkout@master
@@ -87,13 +80,18 @@ jobs:
           mv app/* .
           rm -r app
           rm -r config
+          
+      - name: Set node version and cache
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: "yarn"
 
       - name: Install dependencies
         run: yarn
 
       - name: Build project
         run: yarn run build
-        
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
