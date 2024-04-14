@@ -76,7 +76,7 @@ jobs:
 
       - name: Set configs
         run: |
-          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ./app/src/config/env/.
+          cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           mv app/* .
           rm -r app
           rm -r config
