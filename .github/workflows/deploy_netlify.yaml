@@ -76,7 +76,7 @@ jobs:
 
       - name: Set configs
         run: |
-          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. .
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ./app/src/config/env
           mv app/* .
           rm -r app
           rm -r config
@@ -100,6 +100,7 @@ jobs:
 
       - name: Build project
         run: yarn run build
+        
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
