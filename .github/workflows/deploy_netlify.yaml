@@ -76,18 +76,10 @@ jobs:
 
       - name: Set configs
         run: |
-          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ./app/src/config/env
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnv }}/. ./app/src/config/env/.
           mv app/* .
           rm -r app
           rm -r config
-
-      - name: Set environment
-        run: |
-          touch .env
-          echo REACT_APP_OIL_PRICE=${{ secrets.REACT_APP_OIL_PRICE }} >> .env
-          echo REACT_APP_PRIVATE_KEY=${{ secrets.REACT_APP_PRIVATE_KEY }} >> .env
-          echo REACT_APP_BASEURL=${{ secrets.REACT_APP_BASEURL }} >> .env
-          cat .env
 
       - name: Set node version and cache
         uses: actions/setup-node@master
