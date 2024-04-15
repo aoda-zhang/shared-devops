@@ -90,7 +90,7 @@ jobs:
       #   run: yarn run build
 
       - name: Get Artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/download-artifact@master
         with:
           name: ${{ inputs.build_name }}
           path: build
