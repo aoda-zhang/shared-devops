@@ -20,29 +20,8 @@ on:
 
     inputs:
       # the application that u want to deploy
-      # app_repository:
-      #   required: true
-      #   type: string
 
-      # app_branch:
-      #   required: false
-      #   type: string
-      #   default: develop
-
-      # the environment configs that u want to get
-      # config_repository:
-      #   required: false
-      #   type: string
-      #   default: aoda-zhang/shared-configs
-      # config_branch:
-      #   required: false
-      #   type: string
-      #   default: main
-      # config_folder:
-      #   required: true
-      #   type: string
-
-      # the environment that u want to deploy (dev,test,prod)
+      # the environment that u want to deploy (uat,prod)
       currentEnv:
         required: true
         type: string
@@ -54,40 +33,10 @@ on:
         type: string
 
 jobs:
-  deploy:
+  deploy_to_netlify:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@master
-      #   with:
-      #     path: app
-
-      # - name: Get configs
-      #   uses: actions/checkout@master
-      #   with:
-      #     repository: ${{ inputs.config_repository }}
-      #     ref: ${{ inputs.config_branch }}
-      #     token: ${{ secrets.PAT }}
-      #     path: config
-
-      # - name: Set configs
-      #   run: |
-      #     cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
-      #     mv app/* .
-      #     rm -r app
-      #     rm -r config
-
-      # - name: Set node version and cache
-      #   uses: actions/setup-node@master
-      #   with:
-      #     cache: "yarn"
-
-      # - name: Install dependencies
-      #   run: yarn
-
-      # - name: Build project
-      #   run: yarn run build
 
       - name: Get Artifacts
         uses: actions/download-artifact@master
