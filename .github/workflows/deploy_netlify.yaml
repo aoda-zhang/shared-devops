@@ -89,7 +89,7 @@ jobs:
       # - name: Build project
       #   run: yarn run build
 
-       - name: Get Artifacts
+      - name: Get Artifacts
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}
