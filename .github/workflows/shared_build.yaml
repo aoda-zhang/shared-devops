@@ -69,6 +69,7 @@ jobs:
           mv app/* .
           rm -r app
           rm -r config
+          ls -R | grep -v 'node_modules'
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
