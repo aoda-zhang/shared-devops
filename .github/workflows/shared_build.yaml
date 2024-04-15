@@ -69,12 +69,12 @@ jobs:
           mv app/* .
           rm -r app
           rm -r config
+          echo "The value is: ${{ inputs.config_folder }}"
           ls -R | grep -v 'node_modules'
 
       - name: Set Node version and Cache
         uses: actions/setup-node@master
         with:
-          node-version: ${{ inputs.node_version }}
           cache: "yarn"
 
       - name: Install and Build
