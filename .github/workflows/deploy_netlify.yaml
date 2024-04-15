@@ -20,84 +20,86 @@ on:
 
     inputs:
       # the application that u want to deploy
-      app_repository:
-        required: true
-        type: string
-      codeScan_language:
-        required: false
-        type: string
-        default: javascript-typescript
-      app_branch:
-        required: false
-        type: string
-        default: develop
+      # app_repository:
+      #   required: true
+      #   type: string
+
+      # app_branch:
+      #   required: false
+      #   type: string
+      #   default: develop
 
       # the environment configs that u want to get
-      config_repository:
-        required: false
-        type: string
-        default: aoda-zhang/shared-configs
-      config_branch:
-        required: false
-        type: string
-        default: main
-      config_folder:
-        required: true
-        type: string
+      # config_repository:
+      #   required: false
+      #   type: string
+      #   default: aoda-zhang/shared-configs
+      # config_branch:
+      #   required: false
+      #   type: string
+      #   default: main
+      # config_folder:
+      #   required: true
+      #   type: string
 
       # the environment that u want to deploy (dev,test,prod)
       currentEnv:
         required: true
         type: string
-        default: DEV
-
-      node_version:
-        required: false
+        default: UAT
+        
+      # the build artifact options
+      build_name:
+        required: true
         type: string
-        default: "20"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
+      # - name: Checkout code
+      #   uses: actions/checkout@master
+      #   with:
+      #     path: app
+
+      # - name: Get configs
+      #   uses: actions/checkout@master
+      #   with:
+      #     repository: ${{ inputs.config_repository }}
+      #     ref: ${{ inputs.config_branch }}
+      #     token: ${{ secrets.PAT }}
+      #     path: config
+
+      # - name: Set configs
+      #   run: |
+      #     cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
+      #     mv app/* .
+      #     rm -r app
+      #     rm -r config
+
+      # - name: Set node version and cache
+      #   uses: actions/setup-node@master
+      #   with:
+      #     cache: "yarn"
+
+      # - name: Install dependencies
+      #   run: yarn
+
+      # - name: Build project
+      #   run: yarn run build
+
+       - name: Get Artifacts
+        uses: actions/upload-artifact@master
         with:
-          path: app
-
-      - name: Get configs
-        uses: actions/checkout@master
-        with:
-          repository: ${{ inputs.config_repository }}
-          ref: ${{ inputs.config_branch }}
-          token: ${{ secrets.PAT }}
-          path: config
-
-      - name: Set configs
-        run: |
-          cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
-          mv app/* .
-          rm -r app
-          rm -r config
-          
-      - name: Set node version and cache
-        uses: actions/setup-node@master
-        with:
-          node-version: ${{ inputs.node_version }}
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn
-
-      - name: Build project
-        run: yarn run build
+          name: ${{ inputs.build_name }}
+          path: build
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: "./build"
-          production-branch: master
+          production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-deployment-environment: ${{ inputs.currentEnv }}
         env:
