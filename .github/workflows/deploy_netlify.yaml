@@ -1,5 +1,6 @@
 name: Netlify Preview Deployment
 
+on:
   workflow_call:
     secrets:
       PAT:

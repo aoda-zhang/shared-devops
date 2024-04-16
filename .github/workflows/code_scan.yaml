@@ -1,5 +1,6 @@
 name: "CodeScan"
 
+on:
   workflow_call:
     inputs:
       codeScan_language:
