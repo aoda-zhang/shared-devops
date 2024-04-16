@@ -1,8 +1,5 @@
 name: "CodeScan"
-on:
-  push:
-    paths-ignore:
-      - "**/.github/**"
+
   workflow_call:
     inputs:
       codeScan_language:

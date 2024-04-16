@@ -1,11 +1,5 @@
 name: Netlify Preview Deployment
 
-on:
-  push:
-    paths-ignore:
-      - "**/.github/**"
-      - "**/*.txt"
-
   workflow_call:
     secrets:
       PAT:

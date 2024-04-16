@@ -1,9 +1,4 @@
 name: shared build devops
-on:
-  push:
-    paths-ignore:
-      - "**/.github/**"
-      - "**/*.txt"
 
   workflow_call:
     secrets:
