@@ -37,6 +37,10 @@ on:
       build_name:
         required: true
         type: string
+      build_path:
+        required: false
+        type: string
+        default: build
 
 jobs:
   setConfigs_Build:
@@ -79,4 +83,4 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}
-          path: build
+          path: ${{ inputs.build_path }}

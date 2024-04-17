@@ -26,6 +26,10 @@ on:
       build_name:
         required: true
         type: string
+      build_path:
+        required: false
+        type: string
+        default: build
 
 jobs:
   deploy_to_netlify:
@@ -37,7 +41,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: ${{ inputs.build_name }}
-          path: build
+          path: ${{ inputs.build_path }}
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
