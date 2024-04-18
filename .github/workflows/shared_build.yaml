@@ -70,7 +70,6 @@ jobs:
           path: app
 
       - name: "Set env configs"
-        uses: actions/checkout@master
         run: |
           cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           mv app/* .
@@ -82,7 +81,7 @@ jobs:
         with:
           cache: "yarn"
           check-latest: true
-        run: |
+      - run: |
           yarn && yarn run ${{ inputs.build_script }}
 
       - name: "Upload artifacts"
