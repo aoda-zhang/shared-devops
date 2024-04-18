@@ -42,6 +42,12 @@ on:
         type: string
         default: build
 
+      # the build script in package.json
+      build_script:
+        required: false
+        type: string
+        default: build
+
 jobs:
   setConfigs_Build:
     runs-on: ubuntu-latest
@@ -77,7 +83,7 @@ jobs:
 
       - name: Install and Build
         run: |
-          yarn && yarn run build
+          yarn && yarn run ${{ inputs.build_script }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
