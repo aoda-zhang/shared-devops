@@ -42,9 +42,16 @@ on:
         type: string
         default: build
 
+      # the environment that u want to deploy (uat,prod)
+      currentEnv:
+        required: true
+        type: string
+        default: UAT
+
 jobs:
   setConfigs_Build:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.currentEnv }}
 
     steps:
       - name: Checkout configs
