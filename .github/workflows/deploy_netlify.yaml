@@ -33,13 +33,13 @@ on:
 
 jobs:
 
-  Get-Artifacts
+  Get-Artifacts:
     uses: actions/download-artifact@master
     with:
       name: ${{ inputs.build_name }}
       path: ${{ inputs.build_path }}
 
-  Deploy-to-Netlify
+  Deploy-to-Netlify:
     uses: nwtgck/actions-netlify@v3.0
     with:
       publish-dir: "./build"
