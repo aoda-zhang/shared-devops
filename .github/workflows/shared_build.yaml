@@ -52,7 +52,7 @@ jobs:
   Checkout-configs:
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
       with:
         repository: ${{ inputs.config_repository }}
         ref: main
@@ -62,7 +62,7 @@ jobs:
   Checkout-business-code:
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
       with:
         repository: ${{ inputs.app_repository }}
         ref: ${{ inputs.app_branch }}
@@ -73,34 +73,29 @@ jobs:
     needs: [Checkout-configs, Checkout-business-code]
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@master
-      run: |
+    - uses: actions/checkout@master
+    - run: |
         cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
         mv app/* .
         rm -r app
         rm -r config
 
-  Set-Node:
+  Install-Build:
     needs: [Set-configs]
     runs-on: ubuntu-latest
     steps:
-      uses: actions/setup-node@master
+    - uses: actions/setup-node@master
       with:
         cache: "yarn"
-
-  Install-Build:
-    needs: [Set-Node]
-    runs-on: ubuntu-latest
-    steps:
-      uses: actions/setup-node@master
-      run: |
+        check-latest: true
+    - run: |
         yarn && yarn run ${{ inputs.build_script }}
 
   Upload-Artifacts:
     needs: [Install-Build]
     runs-on: ubuntu-latest
     steps:
-      uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@master
       with:
         name: ${{ inputs.build_name }}
         path: ${{ inputs.build_path }}
