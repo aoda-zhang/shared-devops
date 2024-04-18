@@ -53,41 +53,55 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.currentEnv }}
 
+  Checkout-configs:
+    environment: ${{ inputs.currentEnvironment }}
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout configs
-        uses: actions/checkout@master
-        with:
-          repository: ${{ inputs.config_repository }}
-          ref: main
-          token: ${{ secrets.PAT }}
-          path: config
+      uses: actions/checkout@master
+      with:
+        repository: ${{ inputs.config_repository }}
+        ref: main
+        token: ${{ secrets.PAT }}
+        path: config
 
-      - name: Checkout business code
-        uses: actions/checkout@master
-        with:
-          repository: ${{ inputs.app_repository }}
-          ref: ${{ inputs.app_branch }}
-          token: ${{ secrets.PAT }}
-          path: app
+  Checkout-business-code:
+    runs-on: ubuntu-latest
+    steps:
+      uses: actions/checkout@master
+      with:
+        repository: ${{ inputs.app_repository }}
+        ref: ${{ inputs.app_branch }}
+        token: ${{ secrets.PAT }}
+        path: app
 
-      - name: Set configs
-        run: |
-          cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
-          mv app/* .
-          rm -r app
-          rm -r config
+  Set-configs:
+    runs-on: ubuntu-latest
+    steps:
+      uses: actions/checkout@master
+      run: |
+        cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
+        mv app/* .
+        rm -r app
+        rm -r config
 
-      - name: Set Node version and Cache
-        uses: actions/setup-node@master
-        with:
-          cache: "yarn"
+  Set-Node:
+    runs-on: ubuntu-latest
+    steps:
+      uses: actions/setup-node@master
+      with:
+        cache: "yarn"
 
-      - name: Install and Build
-        run: |
-          yarn && yarn run ${{ inputs.build_script }}
+  Install-Build:
+    runs-on: ubuntu-latest
+    steps:
+      uses: actions/setup-node@master
+      run: |
+        yarn && yarn run ${{ inputs.build_script }}
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ inputs.build_name }}
-          path: ${{ inputs.build_path }}
+  Upload-Artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      uses: actions/upload-artifact@master
+      with:
+        name: ${{ inputs.build_name }}
+        path: ${{ inputs.build_path }}
