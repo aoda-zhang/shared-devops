@@ -75,6 +75,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - run: |
+        ls -R
         cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
         mv app/* .
         rm -r app
