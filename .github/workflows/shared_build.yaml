@@ -49,12 +49,7 @@ on:
         default: UAT
 
 jobs:
-  setConfigs_Build:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.currentEnv }}
-
   Checkout-configs:
-    environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
       uses: actions/checkout@master
@@ -75,6 +70,7 @@ jobs:
         path: app
 
   Set-configs:
+    needs: [Checkout-configs, Checkout-business-code]
     runs-on: ubuntu-latest
     steps:
       uses: actions/checkout@master
@@ -85,6 +81,7 @@ jobs:
         rm -r config
 
   Set-Node:
+    needs: [Set-configs]
     runs-on: ubuntu-latest
     steps:
       uses: actions/setup-node@master
@@ -92,6 +89,7 @@ jobs:
         cache: "yarn"
 
   Install-Build:
+    needs: [Set-Node]
     runs-on: ubuntu-latest
     steps:
       uses: actions/setup-node@master
@@ -99,6 +97,7 @@ jobs:
         yarn && yarn run ${{ inputs.build_script }}
 
   Upload-Artifacts:
+    needs: [Install-Build]
     runs-on: ubuntu-latest
     steps:
       uses: actions/upload-artifact@master
