@@ -24,15 +24,17 @@ on:
       build_name:
         required: true
         type: string
+
       build_path:
         required: false
         type: string
-        default: build
+        default: build:PROD
 
 jobs:
-  Get-Artifacts:
+  Shared-Deploy:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -40,10 +42,27 @@ jobs:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
-  Deploy-to-Netlify:
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "./build"
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  Shared-PROD-Release:
+    environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
-    needs: Get-Artifacts
+    if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.build_name }}
+          path: ${{ inputs.build_path }}
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
         with:

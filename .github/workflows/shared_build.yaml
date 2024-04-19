@@ -49,7 +49,7 @@ on:
         default: UAT
 
 jobs:
-  Checkout-configs:
+  Shared-build:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
@@ -69,7 +69,7 @@ jobs:
           token: ${{ secrets.PAT }}
           path: app
 
-      - name: "Set env configs"
+      - name: "Set environment variables"
         run: |
           cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           mv app/* .
@@ -81,7 +81,9 @@ jobs:
         with:
           cache: "yarn"
           check-latest: true
-      - run: |
+
+      - name: "Install and Build"
+        run: |
           yarn && yarn run ${{ inputs.build_script }}
 
       - name: "Upload artifacts"
