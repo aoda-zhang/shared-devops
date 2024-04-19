@@ -1,11 +1,8 @@
-name: Netlify Deployment
+name: Shared Deployment
 
 on:
   workflow_call:
     secrets:
-      PAT:
-        required: true
-        description: "private access token"
       NETLIFY_AUTH_TOKEN:
         required: true
         description: "netlify access token"
@@ -42,7 +39,7 @@ jobs:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
-      - name: Deploy to Netlify ${{ inputs.currentEnvironment}}
+      - name: Deploy to ${{ inputs.currentEnvironment}}
         if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
         uses: nwtgck/actions-netlify@v3.0
         with:
@@ -60,7 +57,7 @@ jobs:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
-      - name: Deploy to Netlify PROD
+      - name: Deploy to PROD
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
         uses: nwtgck/actions-netlify@v3.0
         with:
