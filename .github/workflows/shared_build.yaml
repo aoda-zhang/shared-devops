@@ -2,11 +2,6 @@ name: shared build
 
 on:
   workflow_call:
-    secrets:
-      PAT:
-        required: true
-        description: "private access token"
-
     inputs:
       # the application that u want to deploy
       app_repository:
@@ -58,7 +53,6 @@ jobs:
         with:
           repository: ${{ inputs.config_repository }}
           ref: main
-          token: ${{ secrets.PAT }}
           path: config
 
       - name: "Checkout codes"
@@ -66,7 +60,6 @@ jobs:
         with:
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
-          token: ${{ secrets.PAT }}
           path: app
 
       - name: "Set environment variables"
