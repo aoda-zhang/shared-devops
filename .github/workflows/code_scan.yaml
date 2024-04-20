@@ -37,7 +37,7 @@ jobs:
         id: code_scan_check
         run: |
           node ./github/scripts/code-scanning-check.js
-          result=$(node ./github/scripts/code-scanning-check.js)
+          result=$(node ../scripts/code-scanning-check.js)
           echo "::set-output name=isCodeScanEnable::$result"
         env:
           github-token: ${{ secrets.GITHUB_TOKEN }}
