@@ -22,9 +22,10 @@ jobs:
 
     steps:
       - name: Set node
-        uses: actions/setup-node@latest
+        uses: actions/setup-node@master
         with:
           node-version: "latest"
+          check-latest: true
 
       - name: Checkout repository
         uses: actions/checkout@master
