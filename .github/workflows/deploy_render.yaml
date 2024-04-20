@@ -42,12 +42,10 @@ jobs:
 
       - name: Deploy to ${{ inputs.currentEnvironment}}
         if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
-        uses: JorgeLNJunior/render-deploy@v1.4.4
+        uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          service_id: ${{ secrets.RENDER_SITE_ID }}
-          api_key: ${{ secrets.RENDER_API_KEY }}
-          github_deployment: true
-          github_token: ${{ secrets.PAT }}
+          service-id: ${{ secrets.RENDER_SITE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
 
       - name: Download PROD artifacts
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
@@ -58,9 +56,7 @@ jobs:
 
       - name: Deploy to PROD
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
-        uses: JorgeLNJunior/render-deploy@v1.4.4
+        uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          service_id: ${{ secrets.RENDER_SITE_ID }}
-          api_key: ${{ secrets.RENDER_API_KEY }}
-          github_deployment: true
-          github_token: ${{ secrets.PAT }}
+          service-id: ${{ secrets.RENDER_SITE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
