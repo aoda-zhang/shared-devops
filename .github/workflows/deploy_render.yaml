@@ -7,6 +7,10 @@ on:
         required: true
         description: "the render project ID"
 
+      RENDER_API_KEY:
+        required: true
+        description: "the render API key"
+
     inputs:
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
@@ -40,7 +44,7 @@ jobs:
         if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
         uses: JorgeLNJunior/render-deploy@v1.4.4
         with:
-          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          service_id: ${{ secrets.RENDER_SITE_ID }}
           api_key: ${{ secrets.RENDER_API_KEY }}
           github_deployment: true
           github_token: ${{ secrets.PAT }}
@@ -56,7 +60,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
         uses: JorgeLNJunior/render-deploy@v1.4.4
         with:
-          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          service_id: ${{ secrets.RENDER_SITE_ID }}
           api_key: ${{ secrets.RENDER_API_KEY }}
           github_deployment: true
           github_token: ${{ secrets.PAT }}
