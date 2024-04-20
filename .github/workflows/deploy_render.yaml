@@ -46,7 +46,6 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_SITE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-          wait-for-success: true
 
       - name: Download PROD artifacts
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
@@ -61,4 +60,3 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_SITE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
-          wait-for-success: true
