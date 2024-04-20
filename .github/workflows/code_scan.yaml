@@ -36,8 +36,8 @@ jobs:
       - name: Check if Code Scanning enable
         id: code_scan_check
         run: |
-          node aoda-zhang/shared-devops/.github/scripts/code-scanning-check.js
-          result=$(node aoda-zhang/shared-devops/.github/scripts/code-scanning-check.js)
+          node ../scripts/code-scanning-check.js
+          result=$(node ../scripts/code-scanning-check.js)
           echo "::set-output name=isCodeScanEnable::$result"
         env:
           github-token: ${{ secrets.GITHUB_TOKEN }}
