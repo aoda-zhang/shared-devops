@@ -55,6 +55,6 @@ jobs:
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
         uses: bounceapp/render-action@0.6.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT }}
           service-id: ${{ secrets.RENDER_SITE_ID }}
           retries: 5
