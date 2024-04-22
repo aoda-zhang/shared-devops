@@ -12,7 +12,7 @@ on:
         description: "the render API key"
 
       PAT:
-        required: true
+        required: false
         description: "private access token"
 
     inputs:
