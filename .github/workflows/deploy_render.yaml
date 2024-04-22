@@ -16,7 +16,7 @@ on:
         description: "private access token"
 
       RENDER_DEPLOY_HOOK_URL:
-        required: false
+        required: true
         description: "render deploy hook url"
 
     inputs:
