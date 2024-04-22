@@ -85,6 +85,7 @@ jobs:
       - name: "Install and Build"
         run: |
           yarn && yarn run ${{ inputs.build_script }}
+          ls -R | grep -v "node_modules" 
 
       - name: "Upload artifacts"
         uses: actions/upload-artifact@master
