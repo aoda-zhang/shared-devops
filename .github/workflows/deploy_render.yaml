@@ -3,14 +3,6 @@ name: Shared Deployment
 on:
   workflow_call:
     secrets:
-      RENDER_SITE_ID:
-        required: true
-        description: "the render project ID"
-
-      RENDER_API_KEY:
-        required: true
-        description: "the render API key"
-
       PAT:
         required: false
         description: "private access token"
@@ -69,4 +61,5 @@ jobs:
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
+          echo ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           curl "$deploy_url"
