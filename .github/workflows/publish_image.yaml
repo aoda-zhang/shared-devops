@@ -68,6 +68,6 @@ jobs:
           check-latest: true
 
       - name: "Publish package"
-        run: yarn publish
+        run: yarn publish --access=restricted
         env:
           NODE_AUTH_TOKEN: ${{secrets.PAT}}
