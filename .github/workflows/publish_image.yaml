@@ -18,10 +18,6 @@ on:
       build_name:
         required: true
         type: string
-      build_path:
-        required: false
-        type: string
-        default: build
 
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
@@ -38,8 +34,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
-          path: ${{ inputs.build_path }}
           github-token: ${{ secrets.PAT }}
+
+      - name: Display downloaded files
+        run: ls -R
 
       - name: "Set node"
         uses: actions/setup-node@master
