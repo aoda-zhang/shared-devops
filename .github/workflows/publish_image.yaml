@@ -6,6 +6,15 @@ on:
       PAT:
         required: true
         description: "private access token"
+      DOCKERHUB_USERNAME:
+        required: true
+        description: "dockerHub user name"
+      DOCKERHUB_TOKEN:
+        required: true
+        description: "dockerHub user password"
+
+
+
 
     inputs:
       # the build artifact options
