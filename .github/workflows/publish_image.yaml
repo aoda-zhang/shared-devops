@@ -13,9 +13,6 @@ on:
         required: true
         description: "dockerHub user password"
 
-
-
-
     inputs:
       # the build artifact options
       build_name:
@@ -56,12 +53,5 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
-          github-token: ${{ secrets.PAT }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.PAT }}
+      - name: Push image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
