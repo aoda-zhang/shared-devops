@@ -55,5 +55,5 @@ jobs:
 
       - name: Push image
         run: |
-          docker tag honey-service ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
