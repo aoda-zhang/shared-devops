@@ -53,5 +53,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
           github-token: ${{ secrets.PAT }}
-        secrets: |
-          GIT_AUTH_TOKEN=${{ secrets.PAT }}
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
