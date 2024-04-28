@@ -63,4 +63,4 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
           github-token: ${{ secrets.PAT }}
           secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+            GIT_AUTH_TOKEN=${{ secrets.PAT }}
