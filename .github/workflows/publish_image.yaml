@@ -6,16 +6,24 @@ on:
       PAT:
         required: true
         description: "private access token"
-      # DOCKERHUB_USERNAME:
-      #   required: true
-      #   description: "dockerHub user name"
-      # DOCKERHUB_TOKEN:
-      #   required: true
-      #   description: "dockerHub user password"
 
     inputs:
-      # the build artifact options
-      build_name:
+      # the application that u want to deploy
+      app_repository:
+        required: true
+        type: string
+
+      app_branch:
+        required: false
+        type: string
+        default: develop
+
+      # the environment configs that u want to get
+      config_repository:
+        required: false
+        type: string
+        default: aoda-zhang/shared-configs
+      config_folder:
         required: true
         type: string
 
@@ -26,22 +34,37 @@ on:
         default: UAT
 
 jobs:
-  docker:
+  Shared-publish-image:
+    environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download ${{ inputs.currentEnvironment}} artifacts
-        if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
-        uses: actions/download-artifact@v4
+      - name: "Checkout configs"
+        uses: actions/checkout@master
         with:
-          name: ${{ inputs.build_name }}
-          github-token: ${{ secrets.PAT }}
+          repository: ${{ inputs.config_repository }}
+          ref: main
+          token: ${{ secrets.PAT }}
+          path: config
 
-      - name: Display downloaded files
-        run: ls -R
+      - name: "Checkout codes"
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.app_repository }}
+          ref: ${{ inputs.app_branch }}
+          token: ${{ secrets.PAT }}
+          path: app
+
+      - name: "Set environment variables"
+        run: |
+          cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
+          mv app/* .
+          rm -r app
+          rm -r config
 
       - name: "Set node"
         uses: actions/setup-node@master
         with:
+          cache: "yarn"
           check-latest: true
 
       - name: "Publish package"
