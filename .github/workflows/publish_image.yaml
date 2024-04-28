@@ -50,4 +50,4 @@ jobs:
       - name: "Publish package"
         run: yarn publish
         env:
-        NODE_AUTH_TOKEN: ${{secrets.PAT}}
+          NODE_AUTH_TOKEN: ${{secrets.PAT}}
