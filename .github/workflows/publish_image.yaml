@@ -1,0 +1,57 @@
+name: publish docker image
+
+on:
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+        description: "private access token"
+
+    inputs:
+      # the build artifact options
+      build_name:
+        required: true
+        type: string
+      build_path:
+        required: false
+        type: string
+        default: build
+
+      # the environment that u want to deploy (uat,prod)
+      currentEnvironment:
+        required: false
+        type: string
+        default: UAT
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download ${{ inputs.currentEnvironment}} artifacts
+        if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.build_name }}
+          path: ${{ inputs.build_path }}
+          github-token: ${{ secrets.PAT }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/honey-service:latest
+          github-token: ${{ secrets.PAT }}
+        secrets: |
+          GIT_AUTH_TOKEN=${{ secrets.PAT }}
