@@ -67,9 +67,9 @@ jobs:
           cache: "yarn"
           check-latest: true
           always-auth: true
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: "Publish package"
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc && yarn publish --access=restricted
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc && yarn && yarn publish --access=restricted
         env:
           NODE_AUTH_TOKEN: ${{secrets.PAT}}
