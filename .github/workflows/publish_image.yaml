@@ -67,7 +67,8 @@ jobs:
           cache: "yarn"
           check-latest: true
           always-auth: true
-          registry-url: "https://registry.npmjs.org"
+          registry-url: "https://registry.npmjs.org",
+          scope: '@aoda-zhang'
 
       - name: "Publish package"
         run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc && yarn && yarn publish --access=restricted
