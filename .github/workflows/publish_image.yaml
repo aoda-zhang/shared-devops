@@ -67,7 +67,7 @@ jobs:
           cache: "yarn"
           check-latest: true
           always-auth: true
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://npm.pkg.github.com'
           scope: '@aoda-zhang'
 
       - name: "Publish package"
