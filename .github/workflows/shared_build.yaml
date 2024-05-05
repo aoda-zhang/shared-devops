@@ -83,7 +83,7 @@ jobs:
 
       - name: "Install and Build"
         run: |
-          yarn && yarn run ${{ inputs.build_script }}
+          yarn && yarn ${{ inputs.build_script }}
 
       - name: "Upload artifacts"
         uses: actions/upload-artifact@master
