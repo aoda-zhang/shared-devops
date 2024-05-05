@@ -14,9 +14,8 @@ on:
         type: string
 
       app_branch:
-        required: false
+        required: true
         type: string
-        default: develop
 
       # the environment configs that u want to get
       config_repository:
