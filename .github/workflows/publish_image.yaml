@@ -64,7 +64,6 @@ jobs:
       - name: "Set node"
         uses: actions/setup-node@master
         with:
-          cache: "yarn"
           check-latest: true
           always-auth: true
           registry-url: 'https://npm.pkg.github.com'
