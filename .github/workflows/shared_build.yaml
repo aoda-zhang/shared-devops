@@ -79,7 +79,6 @@ jobs:
       - name: "Set node"
         uses: actions/setup-node@master
         with:
-          cache: "yarn"
           check-latest: true
 
       - name: "Install and Build"
