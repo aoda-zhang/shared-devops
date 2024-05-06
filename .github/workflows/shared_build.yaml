@@ -82,7 +82,6 @@ jobs:
 
       - name: "Install and Build"
         run: |
-          ls -l | grep -v "node_modules"
           yarn && yarn run ${{ inputs.build_script }}
 
       - name: "Upload artifacts"
