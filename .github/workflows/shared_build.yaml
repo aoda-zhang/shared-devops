@@ -37,8 +37,9 @@ on:
 
       # the build script in package.json
       build_script:
-        required: true
+        required: false
         type: string
+        default: build:UAT
 
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
