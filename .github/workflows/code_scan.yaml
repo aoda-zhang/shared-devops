@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Set node
-        uses: actions/setup-node@master
+        uses: actions/setup-node@main
         with:
           node-version: "latest"
           check-latest: true

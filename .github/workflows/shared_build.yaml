@@ -76,13 +76,14 @@ jobs:
           rm -r config
 
       - name: "Set node"
-        uses: actions/setup-node@master
+        uses: actions/setup-node@main
         with:
           check-latest: true
+          cache: "yarn"
 
       - name: "Install and Build"
         run: |
-          yarn && yarn run ${{ inputs.build_script }}
+          yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
       - name: "Upload artifacts"
         uses: actions/upload-artifact@master
