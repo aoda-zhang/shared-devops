@@ -70,7 +70,8 @@ jobs:
 
       - name: "Set environment variables"
         run: |
-          cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
+          cp -r ./config/${{ inputs.config_folder }}/envConfigs/. ./app/src/config/.
+          cp -r ./config/${{ inputs.config_folder }}/settingConfigs/. ./app/.
           mv app/* .
           rm -r app
           rm -r config
