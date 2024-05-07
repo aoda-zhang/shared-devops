@@ -57,6 +57,10 @@ jobs:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
+      - name: logs current files
+        run: |
+          ls -l | grep -v "node_modules"
+
       - name: Deploy to PROD
         # Only run this step if the branch is main
         if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
