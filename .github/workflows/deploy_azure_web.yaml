@@ -27,49 +27,47 @@ on:
         default: build
 
 jobs:
-  Shared-Deploy:
+  Shared-Deploy-UAT:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
     steps:
-      - name: Download ${{ inputs.currentEnvironment}} artifacts
-        if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+      - name: Download UAT artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
-      - name: Deploy to ${{ inputs.currentEnvironment}}
-        if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+      - name: Deploy to UAT
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.PAT }}
           action: "upload"
-          app_location: "build"
+          app_location: ${{ inputs.build_path }}
           api_location: "/api"
           output_location: ""
           skip_app_build: true
 
+  Shared-Deploy-PROD:
+    environment: ${{ inputs.currentEnvironment }}
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
+    # Only run this step if the branch is main
+    steps:
       - name: Download PROD artifacts
-        if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
           path: ${{ inputs.build_path }}
 
-      - name: logs current files
-        run: |
-          ls -l | grep -v "node_modules"
-
       - name: Deploy to PROD
-        # Only run this step if the branch is main
-        if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_WEB_TOKEN }}
           repo_token: ${{ secrets.PAT }}
           action: "upload"
-          app_location: "build"
+          app_location: ${{ inputs.build_path }}
           api_location: "/api"
           output_location: ""
           skip_app_build: true
