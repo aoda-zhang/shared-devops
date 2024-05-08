@@ -7,9 +7,13 @@ on:
         required: false
         description: "private access token"
 
-      AZURE_WEB_TOKEN:
+      AZURE_PPL:
         required: true
-        description: "azure deploy web token"
+        description: "azure deploy to service publish profile"
+
+      # the build artifact options
+      azure_service_name:
+        required: true
     inputs:
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
@@ -23,26 +27,23 @@ on:
         type: string
 
 jobs:
-  Shared-Deploy-UAT:
+  Shared-Deploy-UAT_TEST:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
     steps:
-      - name: Download UAT artifacts
+      - name: Download UAT/TEST artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
 
-      - name: Deploy to UAT
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Deploy to UAT/TEST
+        uses: azure/webapps-deploy@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_WEB_TOKEN }}
-          repo_token: ${{ secrets.PAT }}
-          action: "upload"
-          app_location: "/"
-          api_location: "/api"
-          output_location: ""
-          skip_app_build: true
+          app-name: ${{secrets.azure_service_name}}
+          slot-name: "Production"
+          package: .
+          publish-profile: ${{ secrets.AZURE_PPL }}
 
   Shared-Deploy-PROD:
     environment: ${{ inputs.currentEnvironment }}
@@ -56,12 +57,9 @@ jobs:
           name: ${{ inputs.build_name }}
 
       - name: Deploy to PROD
-        uses: Azure/static-web-apps-deploy@v1
+        uses: azure/webapps-deploy@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_WEB_TOKEN }}
-          repo_token: ${{ secrets.PAT }}
-          action: "upload"
-          app_location: "/"
-          api_location: "/api"
-          output_location: ""
-          skip_app_build: true
+          app-name: ${{secrets.azure_service_name}}
+          slot-name: "Production"
+          package: .
+          publish-profile: ${{ secrets.AZURE_PPL }}
