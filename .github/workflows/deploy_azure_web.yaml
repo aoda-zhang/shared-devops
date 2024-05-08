@@ -6,8 +6,9 @@ on:
       PAT:
         required: false
         description: "private access token"
+
       AZURE_WEB_TOKEN:
-        required: false
+        required: true
         description: "azure deploy web token"
     inputs:
       # the environment that u want to deploy (uat,prod)
@@ -35,7 +36,7 @@ jobs:
       - name: Deploy to UAT
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_WEB_TOKEN }}
           repo_token: ${{ secrets.PAT }}
           action: "upload"
           app_location: "/"
@@ -53,7 +54,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
-          
+
       - name: Download PROD artifacts
         run: |
           ls -l | grep -v "node_modules"
