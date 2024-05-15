@@ -84,7 +84,7 @@ jobs:
 
       - name: "Install and Build"
         run: |
-          yarn --frozen-lockfile --production && yarn run ${{ inputs.build_script }}
+          yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
       - name: Zip artifacts
         run: zip -r artifact.zip dist package.json node_modules
