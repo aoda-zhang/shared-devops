@@ -31,11 +31,15 @@ jobs:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+
     steps:
       - name: Download UAT/TEST artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
+
+      - name: Unzip artifacts
+        run: unzip artifact.zip
 
       - name: Deploy to UAT/TEST
         uses: azure/webapps-deploy@v2
@@ -55,6 +59,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
+
+      - name: Unzip artifacts
+        run: unzip artifact.zip
 
       - name: Deploy to PROD
         uses: azure/webapps-deploy@v2
