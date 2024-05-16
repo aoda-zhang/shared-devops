@@ -46,9 +46,12 @@ on:
 
 jobs:
   Shared-Deploy-UAT_TEST:
-    environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
-
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
 
     steps:
@@ -74,11 +77,16 @@ jobs:
           app-name: ${{secrets.azure_service_name}}
           slot-name: "Production"
           package: .
-          publish-profile: ${{ secrets.AZURE_PPL }}
 
   Shared-Deploy-PROD:
     runs-on: ubuntu-latest
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write
     if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
+
     # Only run this step if the branch is main
     steps:
       - name: Download PROD artifacts
@@ -102,4 +110,4 @@ jobs:
         with:
           app-name: ${{secrets.azure_service_name}}
           slot-name: "Production"
-          publish-profile: ${{ secrets.AZURE_PPL }}
+          package: .
