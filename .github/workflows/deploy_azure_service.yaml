@@ -44,14 +44,15 @@ on:
         type: string
         default: web
 
+permissions:
+  id-token: write
+
 jobs:
   Shared-Deploy-UAT_TEST:
     runs-on: ubuntu-latest
     environment:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
 
     steps:
@@ -83,8 +84,6 @@ jobs:
     environment:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write
     if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
 
     # Only run this step if the branch is main
