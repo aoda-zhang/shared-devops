@@ -28,8 +28,9 @@ on:
 
 jobs:
   Shared-Deploy-UAT_TEST:
-    environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
     steps:
       - name: Download UAT/TEST artifacts
@@ -46,7 +47,8 @@ jobs:
           publish-profile: ${{ secrets.AZURE_PPL }}
 
   Shared-Deploy-PROD:
-    environment: ${{ inputs.currentEnvironment }}
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
     # Only run this step if the branch is main
