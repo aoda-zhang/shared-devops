@@ -86,16 +86,16 @@ jobs:
         uses: actions/setup-node@main
         with:
           check-latest: true
-          cache: "npm"
+          cache: "yarn"
           node-version: "20.x"
 
       - name: Install and Build
         run: |
-          npm ci && npm run ${{ inputs.build_script }}
+          yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
       - name: Zip artifacts
         if: ${{ inputs.appType == 'service' }}
-        run: zip -r artifact.zip dist package.json package-lock.json
+        run: zip -r artifact.zip dist package.json yarn.lock
 
       - name: Upload artifacts for service
         if: ${{ inputs.appType == 'service' }}

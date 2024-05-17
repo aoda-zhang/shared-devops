@@ -66,7 +66,7 @@ jobs:
         with:
           check-latest: true
           always-auth: true
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://yarn.pkg.github.com'
           scope: '@aoda-zhang'
 
       - name: "Publish package"
