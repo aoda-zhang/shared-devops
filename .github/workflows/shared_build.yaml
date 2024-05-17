@@ -93,18 +93,18 @@ jobs:
         run: |
           yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
-      - name: Zip and Upload artifacts
+      - name: Zip artifacts
         if: ${{ inputs.appType == 'service' }}
         run: zip -r artifact.zip dist package.json yarn.lock
 
-      - name: Upload artifacts
+      - name: Upload artifacts for service
         if: ${{ inputs.appType == 'service' }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}
           path: artifact.zip
 
-      - name: Upload artifacts
+      - name: Upload artifacts for web
         if: ${{ inputs.appType == 'web' }}
         uses: actions/upload-artifact@master
         with:
