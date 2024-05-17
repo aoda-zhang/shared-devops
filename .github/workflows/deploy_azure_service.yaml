@@ -50,7 +50,7 @@ jobs:
       - name: Deploy to UAT/TEST
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{secrets.azure_service_name}}
+          app-name: ${{ secrets.azure_service_name }}
           slot-name: "Production"
           package: artifact.zip
           publish-profile: ${{ secrets.AZURE_PPL }}
@@ -69,7 +69,7 @@ jobs:
       - name: Deploy to PROD
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{secrets.azure_service_name}}
+          app-name: ${{ secrets.azure_service_name }}
           slot-name: "Production"
           package: artifact.zip
           publish-profile: ${{ secrets.AZURE_PPL }}
