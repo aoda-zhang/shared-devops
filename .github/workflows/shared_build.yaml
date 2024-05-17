@@ -95,7 +95,7 @@ jobs:
 
       - name: Zip and Upload artifacts
         if: ${{ inputs.appType == 'service' }}
-        run: zip -r artifact.zip dist package.json node_modules
+        run: zip -r artifact.zip dist package.json yarn.lock
 
       - name: Upload artifacts
         if: ${{ inputs.appType == 'service' }}

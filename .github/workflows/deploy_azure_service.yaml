@@ -11,18 +11,6 @@ on:
         required: true
         description: "azure deploy to service publish profile"
 
-      AZURE_CLIENT_ID:
-        required: true
-        description: "azure client ID"
-
-      AZURE_TENANT_ID:
-        required: true
-        description: "azure tenant ID"
-
-      AZURE_SUB_ID:
-        required: true
-        description: "azure subsction ID"
-
       # the build artifact options
       azure_service_name:
         required: true
@@ -50,9 +38,6 @@ permissions:
 jobs:
   Shared-Deploy-UAT_TEST:
     runs-on: ubuntu-latest
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
 
     steps:
@@ -61,29 +46,17 @@ jobs:
         with:
           name: ${{ inputs.build_name }}
 
-      - name: Unzip artifacts
-        if: inputs.appType == 'service'
-        run: unzip artifact.zip
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUB_ID }}
 
       - name: Deploy to UAT/TEST
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{secrets.azure_service_name}}
           slot-name: "Production"
-          package: .
+          package: artifact.zip
+          publish-profile: ${{ secrets.AZURE_PPL }}
 
   Shared-Deploy-PROD:
     runs-on: ubuntu-latest
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
 
     # Only run this step if the branch is main
@@ -93,20 +66,10 @@ jobs:
         with:
           name: ${{ inputs.build_name }}
 
-      - name: Unzip artifacts
-        if: inputs.appType == 'service'
-        run: unzip artifact.zip
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUB_ID }}
-
       - name: Deploy to PROD
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{secrets.azure_service_name}}
           slot-name: "Production"
-          package: .
+          package: artifact.zip
+          publish-profile: ${{ secrets.AZURE_PPL }}
