@@ -47,11 +47,11 @@ on:
         type: string
         default: UAT
 
-      # the app that u want to build, one is for frontEnd web, another is for backEnd service
-      appType:
+      # Is need to deploy by ZIP
+      isZipDeploy:
         required: false
         type: string
-        default: web
+        default: "false"
 
 jobs:
   Shared-build:
@@ -78,6 +78,13 @@ jobs:
         run: |
           cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/. ./app/.
+
+          if [ -d "./app/public" ]; then
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/public/. ./app/public/.
+          else
+            echo "Is backEnd service,no Public folder!"
+          fi
+
           mv app/* .
           rm -r app
           rm -r config
@@ -94,18 +101,18 @@ jobs:
           yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
       - name: Zip artifacts
-        if: ${{ inputs.appType == 'service' }}
+        if: ${{ inputs.isZipDeploy == "true" }}
         run: zip -r artifact.zip dist package.json yarn.lock
 
       - name: Upload artifacts for service
-        if: ${{ inputs.appType == 'service' }}
+        if: ${{ inputs.isZipDeploy == "false" }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}
           path: artifact.zip
 
       - name: Upload artifacts for web
-        if: ${{ inputs.appType == 'web' }}
+        if: ${{ inputs.isZipDeploy == 'false' }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}

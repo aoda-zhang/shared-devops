@@ -1,4 +1,4 @@
-name: Shared Deployment
+name: Shared Deploy to Azure service
 
 on:
   workflow_call:
@@ -33,12 +33,6 @@ on:
       build_name:
         required: true
         type: string
-
-      # the app that u want to build, one is for frontEnd web, another is for backEnd service
-      appType:
-        required: false
-        type: string
-        default: web
 
 permissions:
   id-token: write
