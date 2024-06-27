@@ -29,12 +29,12 @@ jobs:
 
       - name: Authenticate with GitHub CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: echo "${{ secrets.PAT }}" | gh auth login --with-token
 
       - name: Get and delete all artifacts
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
           REPO=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
