@@ -36,12 +36,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-        OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
-        REPO=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
+          REPO=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
         
-        artifacts=$(gh api -X GET /repos/$OWNER/$REPO/actions/artifacts -H "Authorization: token $GITHUB_TOKEN" | jq -r '.artifacts[].id')
+          artifacts=$(gh api -X GET /repos/$OWNER/$REPO/actions/artifacts -H "Authorization: token $GITHUB_TOKEN" | jq -r '.artifacts[].id')
 
-        for artifact_id in $artifacts; do
+          for artifact_id in $artifacts; do
           echo "Deleting artifact $artifact_id"
           gh api -X DELETE /repos/$OWNER/$REPO/actions/artifacts/$artifact_id -H "Authorization: token $GITHUB_TOKEN"
-        done
+          done
