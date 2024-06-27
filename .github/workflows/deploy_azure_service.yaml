@@ -1,4 +1,4 @@
-name: Shared Deployment
+name: Shared Deploy to Azure service
 
 on:
   workflow_call:
@@ -7,9 +7,17 @@ on:
         required: false
         description: "private access token"
 
-      AZURE_PPL:
+      AZURE_CLIENT_ID:
         required: true
-        description: "azure deploy to service publish profile"
+        description: "azure client ID"
+
+      AZURE_TENANT_ID:
+        required: true
+        description: "azure tenant ID"
+
+      AZURE_SUB_ID:
+        required: true
+        description: "azure subsction ID"
 
       # the build artifact options
       azure_service_name:
@@ -26,31 +34,46 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write
+
 jobs:
   Shared-Deploy-UAT_TEST:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
     if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+
     steps:
       - name: Download UAT/TEST artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build_name }}
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUB_ID }}
+
       - name: Deploy to UAT/TEST
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{secrets.azure_service_name}}
+          app-name: ${{ secrets.azure_service_name }}
           slot-name: "Production"
-          package: .
-          publish-profile: ${{ secrets.AZURE_PPL }}
+          package: artifact.zip
+          # publish-profile: ${{ secrets.AZURE_PPL }}
 
   Shared-Deploy-PROD:
-    permissions:
-      id-token: write
     runs-on: ubuntu-latest
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
+
     # Only run this step if the branch is main
     steps:
       - name: Download PROD artifacts
@@ -58,8 +81,17 @@ jobs:
         with:
           name: ${{ inputs.build_name }}
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUB_ID }}
+
       - name: Deploy to PROD
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{secrets.azure_service_name}}
-          publish-profile: ${{ secrets.AZURE_PPL }}
+          app-name: ${{ secrets.azure_service_name }}
+          slot-name: "Production"
+          package: artifact.zip
+          # publish-profile: ${{ secrets.AZURE_PPL }}

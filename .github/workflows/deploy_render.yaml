@@ -18,17 +18,42 @@ on:
         type: string
         default: UAT
 
+      # the build artifact options
+      build_name:
+        required: true
+        type: string
+
+      build_path:
+        required: false
+        type: string
+        default: build
+
 jobs:
   Shared-Deploy:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
+      - name: Download ${{ inputs.currentEnvironment}} artifacts
+        if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.build_name }}
+          path: ${{ inputs.build_path }}
+          github-token: ${{ secrets.PAT }}
+
       - name: Deploy to ${{ inputs.currentEnvironment}}
         if: github.ref != 'refs/heads/main' && inputs.currentEnvironment != 'PROD'
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           curl "$deploy_url"
+
+      - name: Download PROD artifacts
+        if: github.ref == 'refs/heads/main' && inputs.currentEnvironment == 'PROD'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.build_name }}
+          path: ${{ inputs.build_path }}
 
       - name: Deploy to PROD
         # Only run this step if the branch is main

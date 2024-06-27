@@ -47,12 +47,18 @@ on:
         type: string
         default: UAT
 
+      # Is need to deploy by ZIP
+      isZipDeploy:
+        required: false
+        type: string
+        default: NO
+
 jobs:
   Shared-build:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout configs"
+      - name: Checkout configs
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.config_repository }}
@@ -60,7 +66,7 @@ jobs:
           token: ${{ secrets.PAT }}
           path: config
 
-      - name: "Checkout codes"
+      - name: Checkout codes
         uses: actions/checkout@master
         with:
           repository: ${{ inputs.app_repository }}
@@ -68,25 +74,45 @@ jobs:
           token: ${{ secrets.PAT }}
           path: app
 
-      - name: "Set environment variables"
+      - name: Set environment variables
         run: |
           cp -r ./config/${{ inputs.config_folder }}/. ./app/src/config/.
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/. ./app/.
+
+          if [ -d "./app/public" ]; then
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/public/. ./app/public/.
+          else
+            echo "Is backEnd service,no Public folder!"
+          fi
+
           mv app/* .
           rm -r app
           rm -r config
 
-      - name: "Set node"
+      - name: Set node
         uses: actions/setup-node@main
         with:
           check-latest: true
           cache: "yarn"
+          node-version: "20.x"
 
-      - name: "Install and Build"
+      - name: Install and Build
         run: |
           yarn --frozen-lockfile && yarn run ${{ inputs.build_script }}
 
-      - name: "Upload artifacts"
+      - name: Zip artifacts
+        if: ${{ inputs.isZipDeploy == 'YES' }}
+        run: zip -r artifact.zip dist package.json yarn.lock
+
+      - name: Upload artifacts for service
+        if: ${{ inputs.isZipDeploy == 'YES' }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ inputs.build_name }}
+          path: artifact.zip
+
+      - name: Upload artifacts for web
+        if: ${{ inputs.isZipDeploy == 'NO' }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.build_name }}
