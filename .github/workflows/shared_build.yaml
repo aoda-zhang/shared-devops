@@ -103,7 +103,7 @@ jobs:
 
       - name: Install and Build
         run: |
-          pnpm --frozen-lockfile && pnpm ${{ inputs.build_script }}
+          pnpm i --frozen-lockfile && pnpm ${{ inputs.build_script }}
 
       - name: Zip artifacts
         if: ${{ inputs.isZipDeploy == 'YES' }}
