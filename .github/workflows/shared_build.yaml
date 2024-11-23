@@ -69,6 +69,8 @@ jobs:
       - name: Checkout codes
         uses: actions/checkout@master
         with:
+          submodules: true          # Clone submodules
+          fetch-depth: 0            # Fetch full history (needed for submodules)
           repository: ${{ inputs.app_repository }}
           ref: ${{ inputs.app_branch }}
           token: ${{ secrets.PAT }}
