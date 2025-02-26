@@ -64,21 +64,27 @@ jobs:
   runs-on: ubuntu-latest
   needs: Shared-build
   steps:
-    - name: Download build artifact
-      uses: actions/download-artifact@v3
+
+    - name: Download ${{inputs.currentEnvironment}} artifacts
+      uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.build_name }}
-        path: ./artifact
+        path: ${{ inputs.build_path }}
+
+      # Add support for more platforms with QEMU
+      # https://github.com/docker/setup-qemu-action
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
+      uses: azure/docker-login@v2
       with:
+        login-server: c${{ secrets.AZURE_ACR_NAME }}.azurecr.io
         username: ${{ secrets.AZURE_ACR_USERNAME }}
         password: ${{ secrets.AZURE_ACR_PASSWORD }}
-        registry: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
 
     - name: Build Docker image
       run: |
