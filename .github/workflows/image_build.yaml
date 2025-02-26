@@ -1,0 +1,90 @@
+name: Build-and-Push-to-ACR
+
+on:
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+        description: "private access token"
+
+    inputs:
+      # the application that u want to deploy
+      app_repository:
+        required: true
+        type: string
+
+      app_branch:
+        required: true
+        type: string
+      # For disfferent microservice project path in monorepo
+      app_folder_path:
+        required: true
+        type: string
+
+      # the shared folder path
+      shared_folder_path:
+        required: false
+        type: string
+        default: Libs
+
+      # the environment configs that u want to get
+      config_repository:
+        required: false
+        type: string
+        default: aoda-zhang/shared-configs
+
+      # the environment configs forlder path
+      config_folder_path:
+        required: true
+        type: string
+
+      # the build artifact options
+      build_name:
+        required: true
+        type: string
+      build_path:
+        required: false
+        type: string
+        default: build
+
+      # the build script in package.json
+      build_script:
+        required: false
+        type: string
+        default: build:UAT
+
+      # the environment that u want to deploy (uat,prod)
+      currentEnvironment:
+        required: false
+        type: string
+        default: UAT
+
+jobs:
+  Build-and-Push-to-ACR:
+  runs-on: ubuntu-latest
+  needs: Shared-build
+  steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.build_name }}
+        path: ./artifact
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.AZURE_ACR_USERNAME }}
+        password: ${{ secrets.AZURE_ACR_PASSWORD }}
+        registry: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
+
+    - name: Build Docker image
+      run: |
+        cd ./artifact
+        docker build -f ./Dockerfile -t ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ inputs.build_name }}:${{ inputs.currentEnvironment }} .
+
+    - name: Push Docker image to Azure ACR
+      run: |
+        docker push ${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ inputs.build_name }}:${{ inputs.currentEnvironment }}
