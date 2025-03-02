@@ -20,10 +20,6 @@ on:
 
       # Build artifact options--------------------------------
 
-      build_name:
-        required: true
-        type: string
-
       build_path:
         required: false
         type: string
@@ -49,7 +45,7 @@ jobs:
     - name: Download ${{inputs.currentEnvironment}} artifacts
       uses: actions/download-artifact@v4
       with:
-        name: ${{ inputs.build_name }}
+        name: ${{ inputs.app_folder_path }}
         path: ${{ inputs.build_path }}
 
       # Add support for more platforms with QEMU
@@ -62,7 +58,7 @@ jobs:
     - name: Login to Azure Container Registry
       uses: azure/docker-login@v2
       with:
-        login-server: c${{ secrets.AZURE_ACR_NAME }}.azurecr.io
+        login-server: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
         username: ${{ secrets.AZURE_ACR_USERNAME }}
         password: ${{ secrets.AZURE_ACR_PASSWORD }}
 

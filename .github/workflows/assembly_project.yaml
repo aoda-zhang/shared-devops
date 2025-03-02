@@ -110,5 +110,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: ${{ inputs.build_name }}
+          name: ${{ inputs.app_folder_path }}
           path: ${{ inputs.build_path }}
