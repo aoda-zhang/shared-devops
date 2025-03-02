@@ -1,4 +1,4 @@
-name: Project Format
+name: Assembly project
 
 on:
   workflow_call:
@@ -42,6 +42,7 @@ on:
       build_name:
         required: true
         type: string
+
       build_path:
         required: false
         type: string
@@ -60,7 +61,7 @@ on:
         default: UAT
 
 jobs:
-  Project-Format:
+  Assembly project:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
@@ -83,27 +84,28 @@ jobs:
       - name: Set environment variables
         run: |
 
-        # Check if config folder exists
           if [ ! -d "./config/${{ inputs.config_folder_path }}" ]; then
           echo "Error: Config folder ${inputs.config_folder_path} not found."
           exit 1
           fi
 
-          cp -r ./config/${{ inputs.config_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/config/.
-          cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/. ./app/.
+          # Ensure the target directories exist
+          mkdir -p ./app/${{inputs.app_folder_path}}/src/config
+          mkdir -p ./app/${{inputs.app_folder_path}}/src/shared
 
-          rm -rf ./app/${{ inputs.app_folder_path }}/src/shared
-          mkdir -p ./app/${{ inputs.app_folder_path }}/src/shared
+          # Copy config and shared folders if they exist
+          cp -r ./config/${{ inputs.config_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/config/.
+          cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.app_folder_path}}/.
+          cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
 
           cp -r ./app/${{inputs.shared_folder_path}}/. ./app/${{inputs.app_folder_path}}/src/shared/.
 
-          mv app/* .
-          
-          # Clean up only app folder and config folder
-          rm -r app
-          rm -r config
+          mv ./app/${{ inputs.app_folder_path }}/* .
 
-          echo "Project ${{inputs.app_folder_path}} format successfully!"
+          rm -rf ./app
+          rm -rf ./config
+
+          echo "Project ${{inputs.app_folder_path}} formatted successfully!"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
