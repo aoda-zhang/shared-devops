@@ -2,6 +2,16 @@ name: Build-and-Push-to-ACR
 
 on:
   workflow_call:
+    secrets:
+      AZURE_ACR_SERVER:
+        required: true
+        description: "azure acr server"
+      AZURE_ACR_USERNAME:
+        required: true
+        description: "azure acr username"
+      AZURE_ACR_PASSWORD:
+        required: true
+        description: "azure acr password"
     inputs:
       app_branch:
         required: true
