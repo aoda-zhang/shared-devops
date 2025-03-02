@@ -61,7 +61,7 @@ on:
         default: UAT
 
 jobs:
-  Assembly project:
+  Assembly-project:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:

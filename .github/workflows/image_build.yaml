@@ -39,37 +39,36 @@ on:
 
 jobs:
   Build-and-Push-to-ACR:
-  runs-on: ubuntu-latest
-  needs: Shared-build
-  steps:
-    - name: Download ${{inputs.currentEnvironment}} artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ inputs.app_folder_path }}
-        path: ${{ inputs.build_path }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download ${{inputs.currentEnvironment}} artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.app_folder_path }}
+          path: ${{ inputs.build_path }}
 
-      # Add support for more platforms with QEMU
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+        # Add support for more platforms with QEMU
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Login to Azure Container Registry
-      uses: azure/docker-login@v2
-      with:
-        login-server: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
-        username: ${{ secrets.AZURE_ACR_USERNAME }}
-        password: ${{ secrets.AZURE_ACR_PASSWORD }}
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.AZURE_ACR_NAME }}.azurecr.io
+          username: ${{ secrets.AZURE_ACR_USERNAME }}
+          password: ${{ secrets.AZURE_ACR_PASSWORD }}
 
-    - name: Build Docker image
-      id: build_image
-      run: |
-        cd ./${{ inputs.build_path }}
-        IMAGE_NAME=${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ inputs.app_folder_path }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
-        docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
-        echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+      - name: Build Docker image
+        id: build_image
+        run: |
+          cd ./${{ inputs.build_path }}
+          IMAGE_NAME=${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${{ inputs.app_folder_path }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
+          docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
-    - name: Push Docker image to Azure ACR
-      run: |
-        docker push ${{ env.IMAGE_NAME }}
+      - name: Push Docker image to Azure ACR
+        run: |
+          docker push ${{ env.IMAGE_NAME }}
