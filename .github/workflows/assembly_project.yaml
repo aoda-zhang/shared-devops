@@ -88,7 +88,7 @@ jobs:
           cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.app_folder_path}}/.
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
 
-          cp -r ./app/${{inputs.shared_folder_path}}/. ./app/${{inputs.app_folder_path}}/src/shared/.
+          # cp -r ./app/${{inputs.shared_folder_path}}/. ./app/${{inputs.app_folder_path}}/src/shared/.
 
           mv ./app/${{ inputs.app_folder_path }}/* .
 
