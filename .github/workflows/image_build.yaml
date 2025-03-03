@@ -49,7 +49,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.app_folder_path }}
-          path: ${{ inputs.build_path }}
+          path: artifacts
 
         # Add support for more platforms with QEMU
       - name: Set up QEMU
@@ -68,7 +68,7 @@ jobs:
       - name: Build Docker image
         id: build_image
         run: |
-          cd ./${{ inputs.build_path }}
+          cd ./artifacts
           IMAGE_NAME=${{ secrets.AZURE_ACR_SERVER }}/${{ inputs.app_folder_path }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV

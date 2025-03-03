@@ -38,13 +38,6 @@ on:
         required: true
         type: string
 
-      # the build artifact options
-
-      build_path:
-        required: false
-        type: string
-        default: build
-
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
         required: true
@@ -88,12 +81,8 @@ jobs:
           cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.app_folder_path}}/.
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
 
-          # cp -r ./app/${{inputs.shared_folder_path}}/. ./app/${{inputs.app_folder_path}}/src/shared/.
-
-          mv ./app/${{ inputs.app_folder_path }}/* .
-
-          rm -rf ./app
-          rm -rf ./config
+          mkdir -p artifacts
+          move ./app/${{inputs.app_folder_path}}/* ./artifacts/.
 
           echo "Project ${{inputs.app_folder_path}} formatted successfully!"
 
@@ -101,4 +90,10 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{ inputs.app_folder_path }}
-          path: ${{ inputs.build_path }}
+          path: artifacts
+
+      - name: Cleanup template files
+        run: |
+         rm -rf ./app/*
+         rm -rf ./config/*
+         rm -rf ./artifacts/*
