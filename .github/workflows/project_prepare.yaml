@@ -1,4 +1,4 @@
-name: Assembly project
+name: Prepare config & project and Upload to Artifact
 
 on:
   workflow_call:
@@ -44,7 +44,7 @@ on:
         type: string
 
 jobs:
-  Assembly-project:
+  Prepare-Project:
     environment: ${{ inputs.currentEnvironment }}
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +82,7 @@ jobs:
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
 
           mkdir -p artifacts
-          move ./app/${{inputs.app_folder_path}}/* ./artifacts/.
+          mv ./app/${{inputs.app_folder_path}}/* ./artifacts/.
 
           echo "Project ${{inputs.app_folder_path}} formatted successfully!"
 
