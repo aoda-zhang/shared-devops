@@ -69,7 +69,7 @@ jobs:
         id: build_image
         run: |
           cd ./artifacts
-          IMAGE_NAME=${{ secrets.AZURE_ACR_SERVER }}/${{ inputs.app_folder_path }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
+          IMAGE_NAME=app-auth-uat
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
