@@ -16,6 +16,7 @@ on:
       app_branch:
         required: true
         type: string
+        
       # For disfferent microservice project path in monorepo
       app_folder_path:
         required: true
@@ -89,7 +90,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: ${{ inputs.app_folder_path }}
+          name: auth-uat
           path: artifacts
 
       - name: Cleanup template files

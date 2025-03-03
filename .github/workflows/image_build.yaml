@@ -48,7 +48,7 @@ jobs:
       - name: Download ${{inputs.currentEnvironment}} artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.app_folder_path }}
+          name: auth-uat
           path: artifacts
 
         # Add support for more platforms with QEMU
