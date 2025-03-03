@@ -75,10 +75,12 @@ jobs:
 
           # Ensure the target directories exist
           mkdir -p ./app/${{inputs.app_folder_path}}/src/config
+          rm ./app/${{inputs.app_folder_path}}/src/shared
           mkdir -p ./app/${{inputs.app_folder_path}}/src/shared
 
           # Copy config and shared folders if they exist
           cp -r ./config/${{ inputs.config_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/config/.
+          mv ./config/${{ inputs.shared_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/shared/.
           cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.app_folder_path}}/.
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
 
