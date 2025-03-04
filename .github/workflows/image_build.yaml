@@ -6,9 +6,11 @@ on:
       AZURE_ACR_SERVER:
         required: true
         description: "azure acr server"
+
       AZURE_ACR_USERNAME:
         required: true
         description: "azure acr username"
+
       AZURE_ACR_PASSWORD:
         required: true
         description: "azure acr password"
@@ -69,7 +71,7 @@ jobs:
         id: build_image
         run: |
           cd ./artifacts
-          IMAGE_NAME=app-auth-uat
+          IMAGE_NAME=fullstackdevelopacr.azurecr.io/app-auth-uat
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
