@@ -16,9 +16,9 @@ on:
       app_branch:
         required: true
         type: string
-        
+
       # For disfferent microservice project path in monorepo
-      app_folder_path:
+      deployed_app:
         required: true
         type: string
 
@@ -35,7 +35,7 @@ on:
         default: aoda-zhang/shared-configs
 
       # the environment configs forlder path
-      config_folder_path:
+      config_folder:
         required: true
         type: string
 
@@ -68,35 +68,35 @@ jobs:
       - name: Set environment variables
         run: |
 
-          if [ ! -d "./config/${{ inputs.config_folder_path }}" ]; then
-          echo "Error: Config folder ${inputs.config_folder_path} not found."
+          if [ ! -d "./config/${{ inputs.config_folder }}" ]; then
+          echo "Error: Config folder ${inputs.config_folder} not found."
           exit 1
           fi
 
           # Ensure the target directories exist
-          mkdir -p ./app/${{inputs.app_folder_path}}/src/config
-          rm ./app/${{inputs.app_folder_path}}/src/shared
-          mkdir -p ./app/${{inputs.app_folder_path}}/src/shared
+          mkdir -p ./app/${{inputs.deployed_app}}/src/config
+          rm ./app/${{inputs.deployed_app}}/src/shared
+          mkdir -p ./app/${{inputs.deployed_app}}/src/shared
 
           # Copy config and shared folders if they exist
-          cp -r ./config/${{ inputs.config_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/config/.
-          cp -r ./app/${{ inputs.shared_folder_path }}/. ./app/${{inputs.app_folder_path}}/src/shared/.
-          cp -r ./config/${{ inputs.config_folder_path }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.app_folder_path}}/.
-          cp -r ./app/pnpm-lock.yaml ./app/${{inputs.app_folder_path}}/.
+          cp -r ./config/${{ inputs.config_folder }}/. ./app/${{inputs.deployed_app}}/src/config/.
+          cp -r ./app/${{ inputs.shared_folder_path }}/. ./app/${{inputs.deployed_app}}/src/shared/.
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.deployed_app}}/.
+          cp -r ./app/pnpm-lock.yaml ./app/${{inputs.deployed_app}}/.
 
           mkdir -p artifacts
-          mv ./app/${{inputs.app_folder_path}}/* ./artifacts/.
+          mv ./app/${{inputs.deployed_app}}/* ./artifacts/.
 
-          echo "Project ${{inputs.app_folder_path}} formatted successfully!"
+          echo "Project ${{inputs.deployed_app}} formatted successfully!"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: auth-uat
+          name: ${{inputs.deployed_app}}/${{inputs.app_branch}}/${{inputs.currentEnvironment}}
           path: artifacts
 
       - name: Cleanup template files
         run: |
-         rm -rf ./app/*
-         rm -rf ./config/*
-         rm -rf ./artifacts/*
+          rm -rf ./app/*
+          rm -rf ./config/*
+          rm -rf ./artifacts/*

@@ -14,13 +14,15 @@ on:
       AZURE_ACR_PASSWORD:
         required: true
         description: "azure acr password"
+        
     inputs:
+      
       app_branch:
         required: true
         type: string
 
       # For disfferent microservice project path in monorepo
-      app_folder_path:
+      deployed_app:
         required: true
         type: string
 
@@ -50,7 +52,7 @@ jobs:
       - name: Download ${{inputs.currentEnvironment}} artifacts
         uses: actions/download-artifact@v4
         with:
-          name: auth-uat
+          name: ${{ inputs.deployed_app }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
           path: artifacts
 
         # Add support for more platforms with QEMU
@@ -71,7 +73,8 @@ jobs:
         id: build_image
         run: |
           cd ./artifacts
-          IMAGE_NAME=fullstackdevelopacr.azurecr.io/app-auth-uat
+          UTC_TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
+          IMAGE_NAME=${{ secrets.AZURE_ACR_SERVER }}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${UTC_TIMESTAMP}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 

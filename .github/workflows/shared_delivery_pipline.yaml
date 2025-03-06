@@ -1,0 +1,117 @@
+name: Delivery pipline
+
+on:
+  workflow_call:
+    secrets:
+      PAT:
+        required: true
+        description: "Personal Access Token"
+
+      # Azure options --------------------------------
+      AZURE_ACR_SERVER:
+        required: true
+        description: "azure acr server"
+
+      AZURE_ACR_USERNAME:
+        required: true
+        description: "azure acr username"
+
+      AZURE_ACR_PASSWORD:
+        required: true
+        description: "azure acr password"
+
+    inputs:
+      # Deployed app options --------------------------------
+
+      app_repository:
+        required: true
+        type: string
+
+      app_branch:
+        required: true
+        type: string
+
+      # For disfferent microservice project path in monorepo
+      deployed_app:
+        required: true
+        type: string
+
+      # For disfferent microservice project path in monorepo
+      deploye_type:
+        required: true
+        type: string
+        default: WEB
+
+      config_path:
+        required: true
+        type: string
+
+      # Build artifact options--------------------------------
+
+      build_path:
+        required: false
+        type: string
+        default: build
+
+      # the docker file path
+      dockerFile_path:
+        required: false
+        type: string
+        default: Dockerfile
+
+      # the environment that u want to deploy (uat,test,prod)
+      currentEnvironment:
+        required: false
+        type: string
+        default: uat
+
+jobs:
+  Prepare-deployment-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set outputs for deployment
+        id: payload
+        run: |
+          echo "::set-output name=deployedRepository::${{ inputs.app_repository }}"
+          echo "::set-output name=deployedAppBranch::${{ inputs.app_branch }}"
+          echo "::set-output name=deployedApp::${{ inputs.deployed_app }}"
+          echo "::set-output name=configPath::${{ inputs.config_path }}"
+          echo "::set-output name=deployedEnv::${{ inputs.environment || 'uat' }}"
+
+  Prepare-deployment-summary:
+    needs: [Prepare-deployment-payload]
+    runs-on: ubuntu-latest
+    steps:
+      - name: summary
+        run: |
+          echo "-----------  Deployment Summary ----------------"
+          echo "The deploy app/service is : ${{ needs.Prepare-deployment-payload.outputs.deployedApp }}"
+          echo "The repositry is : ${{ needs.Prepare-deployment-payload.outputs.deployedRepository }}"
+          echo "The app/service branch is : ${{ needs.Prepare-deployment-payload.outputs.deployedAppBranch }}" 
+          echo "The deployed app config folder Path is : ${{ needs.Prepare-deployment-payload.outputs.configPath }}"
+          echo "Current deployed environment is: ${{ needs.Prepare-deployment-payload.outputs.deployedEnv }}"
+          echo "----------- Please check the summary when troubleshooting ----------------"
+
+  Project-prepare:
+    needs: [Prepare-deployment-payload]
+    uses: ./.github/workflows/shared_project_prepare.yaml
+    with:
+      app_repository: ${{ needs.Prepare-deployment-payload.outputs.deployedRepository }}
+      app_branch: ${{ needs.Prepare-deployment-payload.outputs.deployedAppBranch }}
+      deployed_app: ${{ needs.Prepare-deployment-payload.outputs.deployedApp }}
+      config_folder: ${{ needs.Prepare-deployment-payload.outputs.configPath }}
+      currentEnvironment: ${{ needs.Prepare-deployment-payload.outputs.deployedEnv }}
+    secrets:
+      PAT: ${{ secrets.PAT }}
+
+  Build-push-image:
+    needs: [Prepare-deployment-payload, Project-prepare]
+    uses: ./.github/workflows/shared_image_build.yaml
+    with:
+      app_branch: ${{ github.ref }}
+      deployed_app: ${{ needs.Prepare-deployment-payload.outputs.deployedApp }}
+      currentEnvironment: ${{ needs.Prepare-deployment-payload.outputs.deployedEnv }}
+    secrets:
+      AZURE_ACR_SERVER: ${{ secrets.ACR_SERVER_UAT }}
+      AZURE_ACR_USERNAME: ${{ secrets.ACR_USERNAME_UAT }}
+      AZURE_ACR_PASSWORD: ${{ secrets.ACR_PWD_UAT }}
