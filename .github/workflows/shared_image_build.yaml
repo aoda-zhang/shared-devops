@@ -14,9 +14,8 @@ on:
       AZURE_ACR_PASSWORD:
         required: true
         description: "azure acr password"
-        
+
     inputs:
-      
       app_branch:
         required: true
         type: string
@@ -74,7 +73,7 @@ jobs:
         run: |
           cd ./artifacts
           UTC_TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
-          IMAGE_NAME=${{ secrets.AZURE_ACR_SERVER }}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${UTC_TIMESTAMP}
+          IMAGE_NAME=${{ secrets.AZURE_ACR_SERVER }}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}/${{ github.sha }}:${UTC_TIMESTAMP}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_NAME .
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
 
