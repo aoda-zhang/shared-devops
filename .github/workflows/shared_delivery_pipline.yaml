@@ -19,21 +19,21 @@ on:
         description: "azure acr password"
 
     inputs:
-      # PAT:
-      #   required: true
-      #   type: string
+      PAT:
+        required: true
+        type: string
 
-      # AZURE_ACR_SERVER:
-      #   required: true
-      #   type: string
+      AZURE_ACR_SERVER:
+        required: true
+        type: string
 
-      # AZURE_ACR_USERNAME:
-      #   required: true
-      #   type: string
+      AZURE_ACR_USERNAME:
+        required: true
+        type: string
 
-      # AZURE_ACR_PASSWORD:
-      #   required: true
-      #   type: string
+      AZURE_ACR_PASSWORD:
+        required: true
+        type: string
 
       app_repository:
         required: true
@@ -124,6 +124,6 @@ jobs:
       deployed_app: ${{ needs.Inject-deployment-variables.outputs.deployedApp }}
       currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
     secrets:
-      AZURE_ACR_SERVER: ${{ secrets.AZURE_ACR_SERVER }}
-      AZURE_ACR_USERNAME: ${{ secrets.AZURE_ACR_USERNAME }}
-      AZURE_ACR_PASSWORD: ${{ secrets.AZURE_ACR_PASSWORD }}
+      AZURE_ACR_SERVER: ${{ inputs.AZURE_ACR_SERVER }}
+      AZURE_ACR_USERNAME: ${{ inputs.AZURE_ACR_USERNAME }}
+      AZURE_ACR_PASSWORD: ${{ inputs.AZURE_ACR_PASSWORD }}
