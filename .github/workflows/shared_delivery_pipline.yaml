@@ -126,6 +126,6 @@ jobs:
       deployed_app: ${{ needs.Inject-deployment-variables.outputs.deployedApp }}
       currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
     secrets:
-      AZURE_ACR_SERVER: ${{ secrets.ACR_SERVER_UAT }}
-      AZURE_ACR_USERNAME: ${{ secrets.ACR_USERNAME_UAT }}
-      AZURE_ACR_PASSWORD: ${{ secrets.ACR_PWD_UAT }}
+      AZURE_ACR_SERVER: ${{ secrets.AZURE_ACR_SERVER }}
+      AZURE_ACR_USERNAME: ${{ secrets.AZURE_ACR_USERNAME }}
+      AZURE_ACR_PASSWORD: ${{ secrets.AZURE_ACR_PASSWORD }}
