@@ -6,8 +6,6 @@ on:
       PAT:
         required: true
         description: "Personal Access Token"
-
-    # Azure options --------------------------------
       AZURE_ACR_SERVER:
         required: true
         description: "azure acr server"
