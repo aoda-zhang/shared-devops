@@ -7,35 +7,35 @@ on:
         required: true
         description: "Personal Access Token"
 
-      # Azure options --------------------------------
-      # AZURE_ACR_SERVER:
-      #   required: true
-      #   description: "azure acr server"
-
-      # AZURE_ACR_USERNAME:
-      #   required: true
-      #   description: "azure acr username"
-
-      # AZURE_ACR_PASSWORD:
-      #   required: true
-      #   description: "azure acr password"
-
-    inputs:
-      PAT:
-        required: true
-        type: string
-
+    # Azure options --------------------------------
       AZURE_ACR_SERVER:
         required: true
-        type: string
+        description: "azure acr server"
 
       AZURE_ACR_USERNAME:
         required: true
-        type: string
+        description: "azure acr username"
 
       AZURE_ACR_PASSWORD:
         required: true
-        type: string
+        description: "azure acr password"
+
+    inputs:
+      # PAT:
+      #   required: true
+      #   type: string
+
+      # AZURE_ACR_SERVER:
+      #   required: true
+      #   type: string
+
+      # AZURE_ACR_USERNAME:
+      #   required: true
+      #   type: string
+
+      # AZURE_ACR_PASSWORD:
+      #   required: true
+      #   type: string
 
       app_repository:
         required: true
