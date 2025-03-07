@@ -8,17 +8,17 @@ on:
         description: "Personal Access Token"
 
       # Azure options --------------------------------
-      AZURE_ACR_SERVER:
-        required: true
-        description: "azure acr server"
+      # AZURE_ACR_SERVER:
+      #   required: true
+      #   description: "azure acr server"
 
-      AZURE_ACR_USERNAME:
-        required: true
-        description: "azure acr username"
+      # AZURE_ACR_USERNAME:
+      #   required: true
+      #   description: "azure acr username"
 
-      AZURE_ACR_PASSWORD:
-        required: true
-        description: "azure acr password"
+      # AZURE_ACR_PASSWORD:
+      #   required: true
+      #   description: "azure acr password"
 
     inputs:
       PAT:
