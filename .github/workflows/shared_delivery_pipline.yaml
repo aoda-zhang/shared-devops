@@ -2,23 +2,23 @@ name: Delivery pipline
 
 on:
   workflow_call:
-    # secrets:
-    #   PAT:
-    #     required: true
-    #     description: "Personal Access Token"
+    secrets:
+      PAT:
+        required: true
+        description: "Personal Access Token"
 
-    #   # Azure options --------------------------------
-    #   AZURE_ACR_SERVER:
-    #     required: true
-    #     description: "azure acr server"
+      # Azure options --------------------------------
+      AZURE_ACR_SERVER:
+        required: true
+        description: "azure acr server"
 
-    #   AZURE_ACR_USERNAME:
-    #     required: true
-    #     description: "azure acr username"
+      AZURE_ACR_USERNAME:
+        required: true
+        description: "azure acr username"
 
-    #   AZURE_ACR_PASSWORD:
-    #     required: true
-    #     description: "azure acr password"
+      AZURE_ACR_PASSWORD:
+        required: true
+        description: "azure acr password"
 
     inputs:
       PAT:
@@ -116,7 +116,7 @@ jobs:
       config_folder: ${{ needs.Inject-deployment-variables.outputs.configPath }}
       currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
     secrets:
-      PAT: ${{ inputs.PAT }}
+      PAT: ${{ secrets.PAT }}
 
   Build-push-image:
     needs: [Inject-deployment-variables, Project-prepare]
@@ -126,6 +126,6 @@ jobs:
       deployed_app: ${{ needs.Inject-deployment-variables.outputs.deployedApp }}
       currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
     secrets:
-      AZURE_ACR_SERVER: ${{ inputs.ACR_SERVER_UAT }}
-      AZURE_ACR_USERNAME: ${{ inputs.ACR_USERNAME_UAT }}
-      AZURE_ACR_PASSWORD: ${{ inputs.ACR_PWD_UAT }}
+      AZURE_ACR_SERVER: ${{ secrets.ACR_SERVER_UAT }}
+      AZURE_ACR_USERNAME: ${{ secrets.ACR_USERNAME_UAT }}
+      AZURE_ACR_PASSWORD: ${{ secrets.ACR_PWD_UAT }}
