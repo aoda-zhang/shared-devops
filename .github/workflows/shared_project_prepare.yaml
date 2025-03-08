@@ -92,7 +92,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: ${{inputs.deployed_app}}/${{inputs.app_branch}}/${{inputs.currentEnvironment}}
+          name: ${{inputs.currentEnvironment}}_${{github.sha}}
           path: artifacts
 
       - name: Cleanup template files

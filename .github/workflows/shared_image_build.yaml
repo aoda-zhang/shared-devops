@@ -51,7 +51,7 @@ jobs:
       - name: Download ${{inputs.currentEnvironment}} artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.deployed_app }}/${{ inputs.app_branch }}/${{ inputs.currentEnvironment }}
+          name: ${{inputs.currentEnvironment}}_${{github.sha}}
           path: artifacts
 
         # Add support for more platforms with QEMU
