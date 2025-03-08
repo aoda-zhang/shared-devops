@@ -61,51 +61,37 @@ on:
         type: string
 
 jobs:
-  Inject-deployment-variables:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set outputs for deployment
-        id: payload
-        run: |
-          echo "::set-output name=deployedRepository::${{ inputs.app_repository }}"
-          echo "::set-output name=deployedAppBranch::${{ inputs.app_branch }}"
-          echo "::set-output name=deployedApp::${{ inputs.deployed_app }}"
-          echo "::set-output name=configPath::${{ inputs.config_path }}"
-          echo "::set-output name=deployedEnv::${{ inputs.environment || 'uat' }}"
-
-  Prepare-deployment-summary:
-    needs: [Inject-deployment-variables]
+  Deployment-payload-summary:
     runs-on: ubuntu-latest
     steps:
       - name: summary
         run: |
           echo "-----------  Deployment Summary ----------------"
-          echo "The deploy app/service is : ${{ needs.Inject-deployment-variables.outputs.deployedApp }}"
-          echo "The repositry is : ${{ needs.Inject-deployment-variables.outputs.deployedRepository }}"
-          echo "The app/service branch is : ${{ needs.Inject-deployment-variables.outputs.deployedAppBranch }}" 
-          echo "The deployed app config folder Path is : ${{ needs.Inject-deployment-variables.outputs.configPath }}"
-          echo "Current deployed environment is: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}"
+          echo "The deploy app/service is : ${{ inputs.deployed_app }}"
+          echo "The repositry is : ${{ inputs.app_repository }}"
+          echo "The app/service branch is : ${{ inputs.app_branch }}" 
+          echo "The deployed app config folder Path is : ${{ inputs.config_path }}"
+          echo "Current deployed environment is: ${{ inputs.currentEnvironment }}"
           echo "----------- Please check the summary when troubleshooting ----------------"
 
   Project-prepare:
-    needs: [Inject-deployment-variables]
     uses: ./.github/workflows/shared_project_prepare.yaml
     with:
-      app_repository: ${{ needs.Inject-deployment-variables.outputs.deployedRepository }}
-      app_branch: ${{ needs.Inject-deployment-variables.outputs.deployedAppBranch }}
-      deployed_app: ${{ needs.Inject-deployment-variables.outputs.deployedApp }}
-      config_folder: ${{ needs.Inject-deployment-variables.outputs.configPath }}
-      currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
+      app_repository: ${{ inputs.app_repository }}
+      app_branch: ${{ inputs.app_branch }}
+      deployed_app: ${{ inputs.deployed_app }}
+      config_folder: ${{ inputs.config_path }}
+      currentEnvironment: ${{ inputs.currentEnvironment }}
     secrets:
       PAT: ${{ secrets.PAT }}
 
   Build-push-image:
-    needs: [Inject-deployment-variables, Project-prepare]
+    needs: [Project-prepare]
     uses: ./.github/workflows/shared_image_build.yaml
     with:
-      app_branch: ${{ github.ref }}
-      deployed_app: ${{ needs.Inject-deployment-variables.outputs.deployedApp }}
-      currentEnvironment: ${{ needs.Inject-deployment-variables.outputs.deployedEnv }}
+      app_branch: ${{ inputs.app_branch }}
+      deployed_app: ${{ inputs.deployed_app }}
+      currentEnvironment: ${{ inputs.currentEnvironment }}
     secrets:
       AZURE_ACR_SERVER: ${{ secrets.AZURE_ACR_SERVER }}
       AZURE_ACR_USERNAME: ${{ secrets.AZURE_ACR_USERNAME }}
