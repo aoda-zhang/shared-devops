@@ -1,4 +1,4 @@
-name: Prepare config & project and Upload to Artifact
+run-name: Prepare ${{inputs.deployed_app}} and upload to artifact in ${{inputs.currentEnvironment}}
 
 on:
   workflow_call:

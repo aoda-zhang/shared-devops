@@ -1,4 +1,5 @@
 name: Delivery pipline
+run-name: Deploy ${{inputs.deployed_app}}-${{inputs.app_branch }} to ${{inputs.currentEnvironment}} by ${{github.actor}}
 
 on:
   workflow_call:
@@ -57,7 +58,7 @@ on:
 
       # the environment that u want to deploy (uat,test,prod)
       currentEnvironment:
-        required: false
+        required: true
         type: string
 
 jobs:
@@ -66,13 +67,13 @@ jobs:
     steps:
       - name: summary
         run: |
-          echo "-----------  Deployment Summary ----------------"
+          echo -----------  Deployment Summary ----------------
           echo "The deploy app/service is : ${{ inputs.deployed_app }}"
           echo "The repositry is : ${{ inputs.app_repository }}"
           echo "The app/service branch is : ${{ inputs.app_branch }}" 
           echo "The deployed app config folder Path is : ${{ inputs.config_path }}"
           echo "Current deployed environment is: ${{ inputs.currentEnvironment }}"
-          echo "----------- Please check the summary when troubleshooting ----------------"
+          echo ----------- Please check the summary when troubleshooting ----------------
 
   Project-prepare:
     uses: ./.github/workflows/shared_project_prepare.yaml
