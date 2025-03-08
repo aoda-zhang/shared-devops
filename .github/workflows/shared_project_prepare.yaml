@@ -1,5 +1,3 @@
-run-name: Prepare ${{inputs.deployed_app}} and upload to artifact in ${{inputs.currentEnvironment}}
-
 on:
   workflow_call:
     secrets:
@@ -100,3 +98,4 @@ jobs:
           rm -rf ./app/*
           rm -rf ./config/*
           rm -rf ./artifacts/*
+run-name: Prepare ${{inputs.deployed_app}} and upload to artifact in ${{inputs.currentEnvironment}}
