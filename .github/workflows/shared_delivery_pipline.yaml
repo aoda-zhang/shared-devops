@@ -1,5 +1,3 @@
-name: Delivery pipline
-
 on:
   workflow_call:
     secrets:
@@ -96,5 +94,3 @@ jobs:
       AZURE_ACR_SERVER: ${{ secrets.AZURE_ACR_SERVER }}
       AZURE_ACR_USERNAME: ${{ secrets.AZURE_ACR_USERNAME }}
       AZURE_ACR_PASSWORD: ${{ secrets.AZURE_ACR_PASSWORD }}
-
-run-name: Deploy ${{inputs.deployed_app}}-${{inputs.app_branch }} to ${{inputs.currentEnvironment}} by ${{github.actor}}

@@ -79,4 +79,3 @@ jobs:
         run: |
           docker push ${{ env.IMAGE_TAG }}
 
-run-name: Build and push image ${{inputs.deployed_app}}/${{inputs.currentEnvironment}}/${{ github.sha }}:${UTC_TIMESTAMP}
