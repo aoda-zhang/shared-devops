@@ -62,15 +62,15 @@ jobs:
       - name: Login to Azure Container Registry
         uses: docker/login-action@v3
         with:
-          registry: fullstackdevelopacr.azurecr.io
+          registry: ${{secrets.AZURE_ACR_SERVER}}
           username: ${{ secrets.AZURE_ACR_USERNAME }}
           password: ${{ secrets.AZURE_ACR_PASSWORD }}
 
-      - name: Build and Push Docker image
+      - name: Build ACR Docker image
         run: |
           cd ./artifacts
           UTC_TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
-          IMAGE_TAG=fullstackdevelopacr.azurecr.io/${{inputs.deployed_app}}:${{inputs.currentEnvironment}}_${UTC_TIMESTAMP}
+          IMAGE_TAG=${{secrets.AZURE_ACR_SERVER}}/${{inputs.deployed_app}}:${{inputs.currentEnvironment}}_${{github.sha}}_${UTC_TIMESTAMP}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_TAG .
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
