@@ -71,7 +71,7 @@ jobs:
         run: |
           cd ./artifacts
           UTC_TIMESTAMP=$(date -u +"%Y%m%d%H%M%S")
-          IMAGE_TAG=${{ secrets.AZURE_ACR_SERVER }}:${{inputs.currentEnvironment}}_${UTC_TIMESTAMP}
+          IMAGE_TAG=${{ secrets.AZURE_ACR_SERVER }}.azurecr.io:${{inputs.currentEnvironment}}_${UTC_TIMESTAMP}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_TAG .
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
