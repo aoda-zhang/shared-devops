@@ -4,15 +4,15 @@ on:
       PAT:
         required: true
         description: "Personal Access Token"
-      AZURE_ACR_SERVER:
+      DOCKER_SERVER:
         required: true
         description: "azure acr server"
 
-      AZURE_ACR_USERNAME:
+      DOCKER_USERNAME:
         required: true
         description: "azure acr username"
 
-      AZURE_ACR_PASSWORD:
+      DOCKER_PASSWORD:
         required: true
         description: "azure acr password"
 
@@ -91,6 +91,6 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
     secrets:
-      AZURE_ACR_SERVER: ${{ secrets.AZURE_ACR_SERVER }}
-      AZURE_ACR_USERNAME: ${{ secrets.AZURE_ACR_USERNAME }}
-      AZURE_ACR_PASSWORD: ${{ secrets.AZURE_ACR_PASSWORD }}
+      DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
