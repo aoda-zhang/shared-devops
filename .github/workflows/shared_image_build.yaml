@@ -82,3 +82,4 @@ jobs:
         with:
           push: true
           tags: ${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}
+          file: ${{inputs.dockerFile_path}}
