@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+        description: "azure aks credenials"
+
+    inputs:
+      app_branch:
+        required: true
+        type: string
+
+      # For disfferent microservice project path in monorepo
+      deployed_app:
+        required: true
+        type: string
+
+      # the docker file path
+      dockerFile_path:
+        required: false
+        type: string
+        default: Dockerfile
+
+      # Build artifact options--------------------------------
+
+      build_path:
+        required: false
+        type: string
+        default: build
+
+      # the environment that u want to deploy (uat,prod)
+      currentEnvironment:
+        required: true
+        type: string
+        default: uat
+
+jobs:
+  Build-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download ${{inputs.currentEnvironment}} artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{inputs.currentEnvironment}}_${{github.sha}}
+          path: artifacts
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.resource_group }}
+          cluster-name: ${{ secrets.cluster_name }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+          kubectl apply -f ingress.yaml
