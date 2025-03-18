@@ -58,23 +58,19 @@ on:
         required: true
         type: string
 
-env:
-  ARTIFACT_NAME: ${{ inputs.currentEnvironment }}_${{ github.sha }}
-  IMAGE_TAG: ${{ secrets.DOCKER_SERVER }}/${{ inputs.deployed_app }}/${{ inputs.currentEnvironment }}:${{ github.sha }}_$(date -u +'%Y%m%d%H%M%S')
-
 jobs:
   Deployment-varibles-summary:
     runs-on: ubuntu-latest
     outputs:
       artifact_name: ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}
       image_tag: ${{ steps.set-varibles.outputs.IMAGE_TAG }}
+      
     steps:
       - name: Setup Dynamic Environment Variables
         id: set-varibles
         run: |
-          IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')
           echo "ARTIFACT_NAME=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_OUTPUT
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Dynamic Environment Variables Summary
         run: |
@@ -85,7 +81,7 @@ jobs:
           echo "The deployed app config folder Path is : ${{ inputs.config_path }}"
           echo "Current deployed environment is: ${{ inputs.currentEnvironment }}"
           echo "The upload artifact name will be : ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}"
-          echo "The deployed image tag will be : ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}"
+          echo "The deployed image tag will be : ${{ steps.set-varibles.outputs.IMAGE_TAG }}"
           echo -----------  Please check the summary when troubleshooting ----------------
 
   Project-prepare:
@@ -97,7 +93,7 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       config_folder: ${{ inputs.config_path }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
-      artifact_name: ${{needs.Deployment-varibles-summary.outputs.artifact_name}}
+      artifact_name: ${{ needs.Deployment-varibles-summary.outputs.artifact_name }}
     secrets:
       PAT: ${{ secrets.PAT }}
 
@@ -109,6 +105,7 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
       image_tag: ${{  needs.Deployment-varibles-summary.outputs.image_tag }}
+      artifact_name: ${{  needs.Deployment-varibles-summary.outputs.artifact_name }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
