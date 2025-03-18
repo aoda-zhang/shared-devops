@@ -70,7 +70,7 @@ jobs:
         id: set-varibles
         run: |
           echo "ARTIFACT_NAME=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_OUTPUT
-          echo "IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Dynamic Environment Variables Summary
         run: |
