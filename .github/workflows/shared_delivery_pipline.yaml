@@ -59,7 +59,7 @@ on:
         type: string
 
 jobs:
-  EnvSetup:
+  Prepare-env:
     runs-on: ubuntu-latest
     outputs:
       artifact_name: ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}
@@ -85,7 +85,7 @@ jobs:
           echo -----------  Please check the summary when troubleshooting ----------------
 
   Project-prepare:
-    needs: [EnvSetup]
+    needs: [Prepare-env]
     uses: ./.github/workflows/shared_project_prepare.yaml
     with:
       app_repository: ${{ inputs.app_repository }}
@@ -93,19 +93,19 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       config_folder: ${{ inputs.config_path }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
-      artifact_name: ${{ needs.EnvSetup.outputs.artifact_name }}
+      artifact_name: ${{ needs.Prepare-env.outputs.artifact_name }}
     secrets:
       PAT: ${{ secrets.PAT }}
 
   Build-push-image:
-    needs: [Project-prepare, EnvSetup]
+    needs: [Project-prepare, Prepare-env]
     uses: ./.github/workflows/shared_image_build.yaml
     with:
       app_branch: ${{ inputs.app_branch }}
       deployed_app: ${{ inputs.deployed_app }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
-      image_tag: ${{  needs.EnvSetup.outputs.image_tag }}
-      artifact_name: ${{  needs.EnvSetup.outputs.artifact_name }}
+      image_tag: ${{  needs.Prepare-env.outputs.image_tag }}
+      artifact_name: ${{  needs.Prepare-env.outputs.artifact_name }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
