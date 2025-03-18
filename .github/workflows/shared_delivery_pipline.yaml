@@ -64,8 +64,8 @@ jobs:
     steps:
       - name: Setup common configs
         run: |
-          echo "IMAGE_TAG=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_ENV
-          echo "ARTIFACT_NAME=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
       - name: summary
         run: |
