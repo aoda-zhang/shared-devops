@@ -36,6 +36,10 @@ on:
         type: string
         default: build
 
+      image_tag:
+        required: true
+        type: string
+
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
         required: true
@@ -66,13 +70,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
+      - name: Build and Push Docker image
         run: |
           cd ./artifacts
-          IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')
-          docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_TAG .
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.IMAGE_TAG }}
+          # IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')
+          docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t ${{inputs.image_tag }} .
+          docker push $${{inputs.image_tag }}

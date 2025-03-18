@@ -62,15 +62,22 @@ jobs:
   Deployment-payload-summary:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup common configs
+        run: |
+          echo "IMAGE_TAG=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
       - name: summary
         run: |
-          echo -----------  Deployment Summary ----------------
+          echo -----------  Deployment Summary -----------------------------------------
           echo "The deploy app/service is : ${{ inputs.deployed_app }}"
           echo "The repositry is : ${{ inputs.app_repository }}"
           echo "The app/service branch is : ${{ inputs.app_branch }}" 
           echo "The deployed app config folder Path is : ${{ inputs.config_path }}"
           echo "Current deployed environment is: ${{ inputs.currentEnvironment }}"
-          echo ----------- Please check the summary when troubleshooting ----------------
+          echo "The upload artifact name will be : $ARTIFACT_NAME"
+          echo "The deployed image tag will be : $IMAGE_TAG"
+          echo -----------  Please check the summary when troubleshooting ----------------
 
   Project-prepare:
     uses: ./.github/workflows/shared_project_prepare.yaml
@@ -80,6 +87,7 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       config_folder: ${{ inputs.config_path }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
+      artifact_name: $ARTIFACT_NAME
     secrets:
       PAT: ${{ secrets.PAT }}
 
@@ -90,6 +98,7 @@ jobs:
       app_branch: ${{ inputs.app_branch }}
       deployed_app: ${{ inputs.deployed_app }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
+      image_tag: $IMAGE_TAG
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

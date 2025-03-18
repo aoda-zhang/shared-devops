@@ -11,6 +11,10 @@ on:
         required: true
         type: string
 
+      artifact_name:
+        required: true
+        type: string
+
       app_branch:
         required: true
         type: string
@@ -90,7 +94,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          name: ${{inputs.currentEnvironment}}_${{github.sha}}
+          name: ${{inputs.artifact_name}}
           path: artifacts
 
       - name: Cleanup template files
