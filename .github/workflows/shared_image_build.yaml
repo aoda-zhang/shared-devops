@@ -73,6 +73,5 @@ jobs:
       - name: Build and Push Docker image
         run: |
           cd ./artifacts
-          # IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t ${{inputs.image_tag }} .
           docker push $${{inputs.image_tag }}
