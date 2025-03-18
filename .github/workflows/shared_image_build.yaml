@@ -77,5 +77,6 @@ jobs:
       - name: Build and Push Docker image
         run: |
           cd ./artifacts
-          docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t ${{inputs.image_tag }} .
+          IMAGE_TAG=${{inputs.image_tag}}
+          docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_TAG .
           docker push $${{inputs.image_tag }}
