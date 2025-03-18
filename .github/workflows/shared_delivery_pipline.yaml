@@ -63,15 +63,19 @@ env:
   IMAGE_TAG: ${{ secrets.DOCKER_SERVER }}/${{ inputs.deployed_app }}/${{ inputs.currentEnvironment }}:${{ github.sha }}_$(date -u +'%Y%m%d%H%M%S')
 
 jobs:
-  Deployment-payload-summary:
+  Deployment-varibles-summary:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_name: ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}
+      image_tag: ${{ steps.set-varibles.outputs.IMAGE_TAG }}
     steps:
-      - name: Setup common configs
+      - name: Setup Dynamic Environment Variables
+        id: set-varibles
         run: |
-          # echo "ARTIFACT_NAME=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_ENV
-          # echo "IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${{inputs.currentEnvironment}}_${{github.sha}}" >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.deployed_app}}/${{inputs.currentEnvironment}}:${{github.sha}}_$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: summary
+      - name: Dynamic Environment Variables Summary
         run: |
           echo -----------  Deployment Summary -----------------------------------------
           echo "The deploy app/service is : ${{ inputs.deployed_app }}"
@@ -79,11 +83,12 @@ jobs:
           echo "The app/service branch is : ${{ inputs.app_branch }}" 
           echo "The deployed app config folder Path is : ${{ inputs.config_path }}"
           echo "Current deployed environment is: ${{ inputs.currentEnvironment }}"
-          echo "The upload artifact name will be : $ARTIFACT_NAME"
-          echo "The deployed image tag will be : $IMAGE_TAG"
+          echo "The upload artifact name will be : ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}"
+          echo "The deployed image tag will be : ${{ steps.set-varibles.outputs.ARTIFACT_NAME }}"
           echo -----------  Please check the summary when troubleshooting ----------------
 
   Project-prepare:
+    needs: [Deployment-varibles-summary]
     uses: ./.github/workflows/shared_project_prepare.yaml
     with:
       app_repository: ${{ inputs.app_repository }}
@@ -91,18 +96,18 @@ jobs:
       deployed_app: ${{ inputs.deployed_app }}
       config_folder: ${{ inputs.config_path }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
-      artifact_name: $ARTIFACT_NAME
+      artifact_name: ${{needs.Deployment-varibles-summary.outputs.artifact_name}}
     secrets:
       PAT: ${{ secrets.PAT }}
 
   Build-push-image:
-    needs: [Project-prepare]
+    needs: [Project-prepare, Deployment-varibles-summary]
     uses: ./.github/workflows/shared_image_build.yaml
     with:
       app_branch: ${{ inputs.app_branch }}
       deployed_app: ${{ inputs.deployed_app }}
       currentEnvironment: ${{ inputs.currentEnvironment }}
-      image_tag: $IMAGE_TAG
+      image_tag: ${{  needs.Deployment-varibles-summary.outputs.image_tag }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
