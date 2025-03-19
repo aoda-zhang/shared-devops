@@ -22,14 +22,6 @@ on:
         description: "azure aks application namespace"
 
     inputs:
-      app_branch:
-        required: true
-        type: string
-
-      # For disfferent microservice project path in monorepo
-      deployed_app:
-        required: true
-        type: string
 
       image_tag:
         required: true
@@ -38,17 +30,18 @@ on:
       artifact_name:
         required: true
         type: string
-      # the environment that u want to deploy (uat,prod)
-      currentEnvironment:
-        required: true
+
+      # the path of the aks manifest file
+      aks_manifests_path:
+        required: false
         type: string
-        default: uat
+        default: "k8s"
 
 jobs:
-  Build-and-push-image:
+  Deplpy-To-AKS:
     runs-on: ubuntu-latest
     steps:
-      - name: Download ${{inputs.currentEnvironment}} artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
@@ -72,7 +65,7 @@ jobs:
         uses: Azure/k8s-deploy@v5
         with:
           action: deploy
-          manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
+          manifests: ${{ inputs.aks_manifests_path }}
           images: ${{secrets.DOCKER_SERVER}}/${{inputs.image_tag}}
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
           name: ${{ secrets.AKS_CLUSTER_NAME }}

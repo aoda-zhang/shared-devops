@@ -4,6 +4,7 @@ on:
       PAT:
         required: true
         description: "Personal Access Token"
+
       DOCKER_SERVER:
         required: true
         description: "azure acr server"
@@ -15,6 +16,22 @@ on:
       DOCKER_PASSWORD:
         required: true
         description: "azure acr password"
+
+      AZURE_CREDENTIALS:
+        required: true
+        description: "azure aks credenials"
+
+      AZURE_RESOURCE_GROUP:
+        required: true
+        description: "azure aks resource group"
+
+      AKS_CLUSTER_NAME:
+        required: true
+        description: "azure aks cluster name"
+
+      AKS_NAMESPACE:
+        required: true
+        description: "azure aks application namespace"
 
     inputs:
       app_repository:
@@ -110,3 +127,16 @@ jobs:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  Deploy-To-AKS:
+    needs: [Prepare-env, Build-push-image]
+    uses: ./.github/workflows/shared_deploy_aks.yaml
+    with:
+      image_tag: ${{  needs.Prepare-env.outputs.image_tag }}
+      artifact_name: ${{  needs.Prepare-env.outputs.artifact_name }}
+    secrets:
+      DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      AKS_CLUSTER_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
+      AKS_NAMESPACE: ${{ secrets.AKS_NAMESPACE }}
