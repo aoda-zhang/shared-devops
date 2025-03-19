@@ -83,7 +83,7 @@ jobs:
           # Copy config and shared folders if they exist
           cp -r ./config/${{ inputs.config_folder }}/. ./app/${{inputs.deployed_app}}/src/config/.
           cp -r ./app/${{ inputs.shared_folder_path }}/. ./app/${{inputs.deployed_app}}/src/shared/.
-          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/k8s/. ./app/${{inputs.deployed_app}}/.
+          cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/k8s ./app/${{inputs.deployed_app}}/.
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.deployed_app}}/.
 
           mkdir -p artifacts

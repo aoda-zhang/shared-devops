@@ -1,6 +1,10 @@
 on:
   workflow_call:
     secrets:
+      DOCKER_SERVER:
+        required: true
+        description: "azure acr server"
+
       AZURE_CREDENTIALS:
         required: true
         description: "azure aks credenials"
@@ -13,6 +17,10 @@ on:
         required: true
         description: "azure aks cluster name"
 
+      AKS_NAMESPACE:
+        required: true
+        description: "azure aks application namespace"
+
     inputs:
       app_branch:
         required: true
@@ -23,6 +31,13 @@ on:
         required: true
         type: string
 
+      image_tag:
+        required: true
+        type: string
+
+      artifact_name:
+        required: true
+        type: string
       # the environment that u want to deploy (uat,prod)
       currentEnvironment:
         required: true
@@ -36,7 +51,7 @@ jobs:
       - name: Download ${{inputs.currentEnvironment}} artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{inputs.currentEnvironment}}_${{github.sha}}
+          name: ${{ inputs.artifact_name }}
           path: artifacts
 
       - name: Azure login
@@ -53,16 +68,12 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
-      - name: Set latest Image version to AKS
-        run: |
-          sed -i 's|image:.*|image: '"$IMAGE_TAG"'|' deployment.yaml
-
-      - name: Apply Kubernetes Manifests
-        run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
-          kubectl apply -f ingress.yaml
-
-      - name: Wait for Deployment to Complete
-        run: |
-          kubectl rollout status deployment/${{ inputs.deployed_app }} --timeout=300s
+      - name: Deploy to AKS
+        uses: Azure/k8s-deploy@v5
+        with:
+          action: deploy
+          manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
+          images: ${{secrets.DOCKER_SERVER}}/${{inputs.image_tag}}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          name: ${{ secrets.AKS_CLUSTER_NAME }}
+          namespace: ${{ secrets.AKS_NAMESPACE }}
