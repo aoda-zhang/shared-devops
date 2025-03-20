@@ -27,7 +27,7 @@ on:
       dockerFile_path:
         required: false
         type: string
-        default: Dockerfile
+        default: k8s-base/Dockerfile
 
       # Build artifact options--------------------------------
 
