@@ -66,9 +66,8 @@ on:
 
       # the docker file path
       dockerFile_path:
-        required: false
+        required: true
         type: string
-        default: Dockerfile
 
       # the environment that u want to deploy (uat,test,prod)
       currentEnvironment:
@@ -123,6 +122,7 @@ jobs:
       currentEnvironment: ${{ inputs.currentEnvironment }}
       image_tag: ${{  needs.Prepare-env.outputs.image_tag }}
       artifact_name: ${{  needs.Prepare-env.outputs.artifact_name }}
+      dockerFile_path: ${{ inputs.dockerFile_path }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

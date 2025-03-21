@@ -25,9 +25,8 @@ on:
 
       # the docker file path
       dockerFile_path:
-        required: false
+        required: true
         type: string
-        default: k8s-base/Dockerfile
 
       # Build artifact options--------------------------------
 
@@ -77,6 +76,6 @@ jobs:
       - name: Build and Push Docker image
         run: |
           cd ./artifacts
-          IMAGE_TAG="${{secrets.DOCKER_SERVER}}/${{inputs.image_tag}}"
+          IMAGE_TAG=${{secrets.DOCKER_SERVER}}/${{inputs.image_tag}}
           docker build -f ./${{inputs.dockerFile_path}} --build-arg BUILD_COMMAND=build:${{inputs.currentEnvironment}} -t $IMAGE_TAG .
           docker push $IMAGE_TAG
