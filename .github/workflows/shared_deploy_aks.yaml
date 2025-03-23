@@ -5,10 +5,6 @@ on:
         required: true
         description: "azure acr server"
 
-      AZURE_CREDENTIALS:
-        required: true
-        description: "azure aks credenials"
-
       AZURE_RESOURCE_GROUP:
         required: true
         description: "azure aks resource group"
@@ -21,8 +17,19 @@ on:
         required: true
         description: "azure aks application namespace"
 
-    inputs:
+      AZURE_CLIENT_ID:
+        required: true
+        description: "azure aks client id"
+        
+      Azure_TENANT_ID:
+        required: true
+        description: "azure aks tenant id"
 
+      Azure_SUBSCRIPTION_ID:
+        required: true
+        description: "azure aks subscription id"
+
+    inputs:
       image_tag:
         required: true
         type: string
@@ -50,7 +57,9 @@ jobs:
       - name: Azure login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Set AKS context
         uses: azure/aks-set-context@v4

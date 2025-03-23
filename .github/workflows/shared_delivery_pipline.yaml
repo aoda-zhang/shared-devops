@@ -17,10 +17,6 @@ on:
         required: true
         description: "azure acr password"
 
-      AZURE_CREDENTIALS:
-        required: true
-        description: "azure aks credenials"
-
       AZURE_RESOURCE_GROUP:
         required: true
         description: "azure aks resource group"
@@ -32,6 +28,18 @@ on:
       AKS_NAMESPACE:
         required: true
         description: "azure aks application namespace"
+
+      AZURE_CLIENT_ID:
+        required: true
+        description: "azure aks client id"
+
+      AZURE_TENANT_ID:
+        required: true
+        description: "azure aks tenant id"
+
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+        description: "azure aks subscription id"
 
     inputs:
       app_repository:
@@ -136,7 +144,9 @@ jobs:
       artifact_name: ${{  needs.Prepare-env.outputs.artifact_name }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
       AKS_CLUSTER_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
       AKS_NAMESPACE: ${{ secrets.AKS_NAMESPACE }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
