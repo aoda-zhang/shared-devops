@@ -44,6 +44,9 @@ on:
         type: string
         default: "k8s"
 
+permissions:
+  id-token: write
+  contents: read
 jobs:
   Deplpy-To-AKS:
     runs-on: ubuntu-latest
