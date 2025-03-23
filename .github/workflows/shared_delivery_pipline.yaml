@@ -82,6 +82,13 @@ on:
         required: true
         type: string
 
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+  issues: write
+  id-token: write
+  
 jobs:
   Prepare-env:
     runs-on: ubuntu-latest
