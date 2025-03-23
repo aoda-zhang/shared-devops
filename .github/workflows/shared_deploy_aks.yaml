@@ -20,12 +20,12 @@ on:
       AZURE_CLIENT_ID:
         required: true
         description: "azure aks client id"
-        
-      Azure_TENANT_ID:
+
+      AZURE_TENANT_ID:
         required: true
         description: "azure aks tenant id"
 
-      Azure_SUBSCRIPTION_ID:
+      AZURE_SUBSCRIPTION_ID:
         required: true
         description: "azure aks subscription id"
 
