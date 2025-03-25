@@ -149,6 +149,7 @@ jobs:
     with:
       image_tag: ${{  needs.Prepare-env.outputs.image_tag }}
       artifact_name: ${{  needs.Prepare-env.outputs.artifact_name }}
+      currentEnvironment: ${{ inputs.currentEnvironment }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
       AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
