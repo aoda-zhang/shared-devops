@@ -144,6 +144,8 @@ jobs:
       currentEnvironment: ${{ inputs.currentEnvironment }}
     secrets:
       DOCKER_SERVER: ${{ secrets.DOCKER_SERVER }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
       AKS_CLUSTER_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
       AKS_NAMESPACE: ${{ secrets.AKS_NAMESPACE }}
