@@ -64,7 +64,7 @@ jobs:
           name: ${{ inputs.artifact_name }}
           path: artifacts
 
-      - name: Login to Docker target Registry
+      - name: Login to Azure ACR
         uses: docker/login-action@v3
         with:
           registry: ${{secrets.DOCKER_SERVER}}
