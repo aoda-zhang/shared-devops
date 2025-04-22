@@ -1,0 +1,73 @@
+on:
+  workflow_call:
+    secrets:
+      AKS_NMESPACE:
+        required: true
+        description: "azure aks application namespace"
+
+      AZURE_CREDS:
+        required: true
+        description: "azure aks subscription id"
+
+    inputs:
+      # the path of the aks manifest file
+      aks_manifests_path:
+        required: false
+        type: string
+        default: "k8s"
+
+      # the environment that u want to deploy (uat,prod)
+      currentEnvironment:
+        required: true
+        type: string
+        default: uat
+
+      config_repository:
+        required: false
+        type: string
+        default: aoda-zhang/shared-configs
+
+      target_config_path:
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  Deplpy-To-AKS:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.currentEnvironment }}
+    steps:
+      - name: Checkout aks configs
+        uses: actions/checkout@master
+        with:
+          repository: ${{ inputs.config_repository }}
+          ref: main
+          token: ${{ secrets.PAT }}
+          path: config
+
+      - name: Set target config
+        run: |
+          mv ./config/${{inputs.target_config_path}}/* ./${{inputs.aks_manifests_path}}
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+
+      - name: Deploy to AKS
+        uses: Azure/k8s-deploy@v5
+        with:
+          action: deploy
+          manifests: ${{ inputs.aks_manifests_path }}
+          namespace: ${{ secrets.AKS_NAMESPACE }}
