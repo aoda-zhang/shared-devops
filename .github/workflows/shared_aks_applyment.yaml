@@ -1,6 +1,11 @@
 on:
   workflow_call:
     secrets:
+      
+      PAT:
+        required: true
+        description: "github personal access token"
+
       AKS_NMESPACE:
         required: true
         description: "azure aks application namespace"
