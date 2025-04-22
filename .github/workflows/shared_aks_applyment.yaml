@@ -5,7 +5,7 @@ on:
         required: true
         description: "github personal access token"
 
-      AKS_NMESPACE:
+      AKS_NAMESPACE:
         required: true
         description: "azure aks application namespace"
 
