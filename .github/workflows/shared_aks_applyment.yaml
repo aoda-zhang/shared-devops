@@ -1,7 +1,6 @@
 on:
   workflow_call:
     secrets:
-      
       PAT:
         required: true
         description: "github personal access token"
@@ -12,7 +11,15 @@ on:
 
       AZURE_CREDS:
         required: true
-        description: "azure aks subscription id"
+        description: "Azure service principal credentials (JSON)"
+
+      AZURE_RESOURCE_GROUP:
+        required: true
+        description: "azure aks resource group"
+
+      AKS_CLUSTER_NAME:
+        required: true
+        description: "azure aks cluster name"
 
     inputs:
       # the path of the aks manifest file
@@ -54,7 +61,13 @@ jobs:
 
       - name: Set target config
         run: |
-          mv ./config/${{inputs.target_config_path}}/* ./${{inputs.aks_manifests_path}}
+          mkdir -p ./${{ inputs.aks_manifests_path }}
+          if [ -d "./config/${{ inputs.target_config_path }}" ]; then
+            mv ./config/${{ inputs.target_config_path }}/* ./${{ inputs.aks_manifests_path }}/
+          else
+            echo "Target config path does not exist: ./config/${{ inputs.target_config_path }}"
+            exit 1
+          fi
 
       - name: Azure login
         uses: azure/login@v2
