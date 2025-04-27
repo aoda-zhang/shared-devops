@@ -89,6 +89,7 @@ jobs:
           
           # Block package-lock.json
           cp -r ./app/pnpm-lock.yaml ./app/${{inputs.deployed_app}}/.
+          cp -r ./app/pnpm-workspace.yaml ./app/${{inputs.deployed_app}}/.
 
           mkdir -p artifacts
           mv ./app/${{inputs.deployed_app}}/* ./artifacts/.
