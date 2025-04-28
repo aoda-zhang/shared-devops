@@ -86,10 +86,7 @@ jobs:
 
           # Move config files to root 
           cp -r ./config/${{ inputs.config_folder }}/${{ inputs.currentEnvironment }}/. ./app/${{inputs.deployed_app}}/.
-          
-          # Block package-lock.json
-          cp -r ./app/pnpm-lock.yaml ./app/${{inputs.deployed_app}}/.
-          
+                    
           mkdir -p artifacts
           mv ./app/${{inputs.deployed_app}}/* ./artifacts/.
 
